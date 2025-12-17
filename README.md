@@ -44,8 +44,8 @@ pip install jupyter pandas numpy openpyxl requests tqdm beautifulsoup4 selenium 
 The pipeline uses R for enrichment analysis. You can install R within the same Conda environment or use a system installation. Here we install via Conda for convenience:
 
 ```bash
-# Install R base
-conda install -c conda-forge r-base=4.2 -y
+# Install R base (let conda resolve the best version, typically >=4.0)
+conda install -c conda-forge r-base -y
 
 # Install R kernel for Jupyter
 conda install -c conda-forge r-irkernel -y
