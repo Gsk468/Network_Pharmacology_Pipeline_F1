@@ -4,7 +4,7 @@ A comprehensive workflow for network pharmacology analysis, focusing on the iden
 
 The pipeline involves:
 1.  **Data Processing (Python):** Ingredient loading, target prediction (SwissTargetPrediction, SEA, PPB3), disease target acquisition (OpenTargets), and network construction.
-2.  **Visualization & Enrichment (R):** GO/KEGG enrichment analysis and visualization.
+2.  **Visualization & Enrichment (R):** GO/KEGG enrichment analysis and advanced visualization (TCMNP plots).
 
 **Note:** This workflow requires switching between Python and R kernels in Jupyter/VSCode or setting up a mixed environment.
 
@@ -63,14 +63,17 @@ To run the R installation commands, you need to open the R interactive console w
 
 ```R
 # Install CRAN packages
-install.packages(c("openxlsx", "ggplot2", "stringr", "GOplot", "ggnewscale", "circlize", "repr"), repos="http://cran.us.r-project.org")
+install.packages(c("openxlsx", "ggplot2", "stringr", "GOplot", "ggnewscale", "circlize", "repr", "cols4all", "ggraph", "igraph", "RColorBrewer", "cowplot", "tidyr", "dplyr", "remotes", "ggrepel", "UpSetR", "ggvenn", "tidygraph"), repos="http://cran.us.r-project.org")
+
+# Install ggsankey from GitHub
+remotes::install_github("davidsjoberg/ggsankey")
 
 # Install Bioconductor Manager
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager", repos="http://cran.us.r-project.org")
 
 # Install Bioconductor packages
-BiocManager::install(c("enrichplot", "clusterProfiler", "DOSE", "topGO", "ComplexHeatmap", "org.Hs.eg.db"))
+BiocManager::install(c("enrichplot", "clusterProfiler", "DOSE", "topGO", "ComplexHeatmap", "org.Hs.eg.db", "ggtree", "VennDetail"))
 ```
 4.  Type `q()` to quit the R console when finished.
 
