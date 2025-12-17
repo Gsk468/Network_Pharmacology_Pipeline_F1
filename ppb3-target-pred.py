@@ -48,36 +48,36 @@ class PPB3Automation:
                 headers = [h.lower().strip() for h in reader.fieldnames]
                 name_headers = ['name', 'compound', 'compoundname', 'id', 'compoundid']
                 smiles_headers = ['smiles', 'smi', 'canonicalsmiles', 'canonical smiles']
-                
+
                 name_col = next((reader.fieldnames[headers.index(h)] for h in name_headers if h in headers), None)
                 smiles_col = next((reader.fieldnames[headers.index(h)] for h in smiles_headers if h in headers), None)
 
                 if not name_col or not smiles_col:
                     logger.error(f"Could not find a 'Name' and/or 'SMILES' column in the CSV header. Found: {reader.fieldnames}")
                     return False
-                
+
                 logger.info(f"Using column '{name_col}' for names and '{smiles_col}' for SMILES.")
-                
+
                 rows = list(reader)
                 total_lines = len(rows)
                 logger.info(f"Found {total_lines} data rows to process.")
-                
+
                 count = 0
                 for row in rows:
-                    if self.max_compounds and count >= self.max_compounds: 
+                    if self.max_compounds and count >= self.max_compounds:
                         logger.info(f"Reached max compounds limit: {self.max_compounds}"); break
-                    
+
                     name = row[name_col].strip()
                     smiles = row[smiles_col].strip()
 
                     if not name or not smiles: continue
                     if not self.is_valid_smiles(smiles): continue
                     if smiles in seen_smiles: continue
-                        
+
                     smiles_dict[name] = smiles
                     seen_smiles.add(smiles)
                     count += 1
-            
+
             logger.info(f"Successfully parsed {len(smiles_dict)} unique compounds.")
             self.smiles_data = smiles_dict
             return True
@@ -106,7 +106,7 @@ class PPB3Automation:
                                 target_name = cells[2].get_text(strip=True)
                                 probability_str = cells[3].get_text(strip=True)
                                 organism = cells[5].get_text(strip=True)
-                                
+
                                 if target_name and probability_str:
                                     probability = float(probability_str)
                                     targets.add((target_name, probability, organism))
@@ -136,7 +136,7 @@ class PPB3Automation:
 
         url = f"{PPB3_URL}result"
         payload = {"smiles": [smiles], "model_type": model_type}
-        
+
         try:
             response = requests.post(url, json=payload, timeout=TIMEOUT)
             response.raise_for_status()
@@ -151,11 +151,11 @@ class PPB3Automation:
         if total == 0:
             logger.error("No compounds to process!");return False
         self.start_time = datetime.now()
-        
+
         try:
             for idx,(compound_name,smiles) in enumerate(self.smiles_data.items(),1):
                 logger.info("="*70); logger.info(f"Processing compound {idx}/{total}: {compound_name}"); logger.info(f"SMILES: {smiles}")
-                
+
                 compound_success = False
                 for method in PREDICTION_METHODS:
                     logger.info(f"Running method '{method}'...")
@@ -166,11 +166,11 @@ class PPB3Automation:
                     else:
                         logger.warning(f"Method '{method}' returned no targets.")
                     time.sleep(INTER_METHOD_DELAY)
-                
+
                 if not compound_success:
                     self.failed_smiles.append((compound_name,smiles))
                     logger.warning(f"Failed to get any results for: {compound_name}")
-                
+
                 logger.info(f"Finished processing compound {idx}/{total}: {compound_name}")
                 time.sleep(INTER_COMPOUND_DELAY)
         except KeyboardInterrupt:
@@ -303,11 +303,11 @@ def main():
     args = parser.parse_args()
     if args.debug:
         logger.setLevel(logging.DEBUG)
-    
+
     automation = PPB3Automation(csv_path=args.csv_file, max_compounds=args.max_compounds, output_dir=args.output_dir)
     if not automation.parse_csv():
         sys.exit(1)
-    
+
     automation.run_predictions()
     automation.save_results()
     automation.print_summary()
