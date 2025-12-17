@@ -52,7 +52,14 @@ conda install -c conda-forge r-irkernel -y
 ```
 
 **Installing R Libraries:**
-Open an R terminal (type `R` in your console) or run these commands in an R script/notebook cell:
+To run the R installation commands, you need to open the R interactive console within your Conda environment:
+
+1.  Ensure your environment is activated:
+    ```bash
+    conda activate netpharm
+    ```
+2.  Type `R` in your terminal/command prompt and press **Enter**. You should see the R startup message.
+3.  Copy and paste the following commands into the R console:
 
 ```R
 # Install CRAN packages
@@ -65,6 +72,7 @@ if (!require("BiocManager", quietly = TRUE))
 # Install Bioconductor packages
 BiocManager::install(c("enrichplot", "clusterProfiler", "DOSE", "topGO", "ComplexHeatmap", "org.Hs.eg.db"))
 ```
+4.  Type `q()` to quit the R console when finished.
 
 ### 5. Running the Pipeline
 
