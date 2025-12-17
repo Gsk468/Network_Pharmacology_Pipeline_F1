@@ -11,11 +11,11 @@ Input:
 
 Output (human targets only; failures are NOT written as rows):
   results_all3_human/
-    combined_target_predictions_all3_human.csv
-    swisstargetprediction_results_human.csv
-    sea_results_human.csv
-    ppb3_results_human.csv
-    combined_target_predictions_all3_human.json
+    combined.csv
+    swiss.csv
+    sea.csv
+    ppb3.csv
+    combined.json
 """
 
 import os
@@ -514,7 +514,7 @@ def save_outputs(all_rows: List[Dict[str, Any]], output_dir: str):
     df = finalize_rank(df)
     df = df.sort_values(["Phytochemical", "Database", "Rank"]).reset_index(drop=True)
 
-    combined_csv = outdir / "combined_target_predictions_all3_human.csv"
+    combined_csv = outdir / "combined.csv"
     df.to_csv(combined_csv, index=False)
     print(f"[OK] Combined HUMAN CSV: {combined_csv} ({len(df)} rows)")
 
@@ -524,7 +524,7 @@ def save_outputs(all_rows: List[Dict[str, Any]], output_dir: str):
         sub.to_csv(out_csv, index=False)
         print(f"[OK] {db} HUMAN CSV: {out_csv} ({len(sub)} rows)")
 
-    combined_json = outdir / "combined_target_predictions_all3_human.json"
+    combined_json = outdir / "combined.json"
     with open(combined_json, "w", encoding="utf-8") as f:
         json.dump(
             {
