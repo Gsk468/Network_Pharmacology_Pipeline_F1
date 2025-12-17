@@ -420,7 +420,7 @@ def sea_parse_table(table, meta: Dict[str, str]) -> List[Dict[str, Any]]:
             "ChEMBL_ID": "",
             "Target_Class": desc,
             "Target_Key": target_key,
-            "Probability": "",
+            "Probability": 1.0,  # SEA returns significant hits (P-value based); treat as High Confidence (1.0) so they survive filtering
             "P_Value": tds[actual_td_indices["P_Value"]].text.strip(),
             "Max_Tc": tds[actual_td_indices["Max_Tc"]].text.strip(),
         })
