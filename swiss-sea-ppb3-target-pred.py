@@ -49,6 +49,53 @@ try:
 except ImportError:
     HAS_BS4 = False
 
+# =========================
+# UniProt Helpers
+# =========================
+UNIPROT_CACHE = {}
+
+def fetch_uniprot_id(name: str) -> str:
+    """
+    Fetches UniProt ID (Entry Name or Accession) for a given gene/protein name.
+    Target: Homo sapiens (9606).
+    """
+    if not name:
+        return ""
+    if name in UNIPROT_CACHE:
+        return UNIPROT_CACHE[name]
+
+    # Try searching as gene name first, then general query
+    queries = [
+        f"gene_exact:{name} AND organism_id:9606 AND reviewed:true",
+        f"{name} AND organism_id:9606 AND reviewed:true",
+        f"{name} AND organism_id:9606"
+    ]
+
+    api_url = "https://rest.uniprot.org/uniprotkb/search"
+
+    for q in queries:
+        try:
+            params = {"query": q, "fields": "id,uniProtkbId", "size": 1, "format": "json"}
+            resp = requests.get(api_url, params=params, timeout=10)
+            if resp.status_code == 200:
+                data = resp.json()
+                results = data.get("results", [])
+                if results:
+                    # Prefer uniProtkbId (Entry Name like ALBU_HUMAN)
+                    uid = results[0].get("uniProtkbId", "")
+                    if not uid:
+                        uid = results[0].get("primaryAccession", "")
+                    if uid:
+                        UNIPROT_CACHE[name] = uid
+                        return uid
+        except Exception:
+            pass
+        time.sleep(0.2)
+
+    UNIPROT_CACHE[name] = "" # Cache failure to avoid retrying
+    return ""
+
+
 
 # =========================
 # Configuration
@@ -473,7 +520,7 @@ def run_ppb3_for_compound(meta: Dict[str, str]) -> List[Dict[str, Any]]:
                 "Rank": "",  # recalculated later
                 "Target_Name": t.get("Target_Name", ""),
                 "Gene_Symbol": "",
-                "UniProt_ID": "",
+                "UniProt_ID": fetch_uniprot_id(t.get("Target_Name", "")),
                 "ChEMBL_ID": "",
                 "Target_Class": method,                 # PPB3 model/method
                 "Target_Key": t.get("Organism", ""),    # organism
@@ -577,45 +624,45 @@ def main():
         for i, meta in enumerate(compounds, start=1):
             print("\n" + "=" * 70)
             print(f"[{i}/{len(compounds)}] {meta['Phytochemical']} | {meta['Plant']}")
-            print(f"SMILES: {meta['SMILES']}")
+            print(f"SMILES: {meta['SMILES']}", flush=True)
             print("=" * 70)
 
             # SwissTargetPrediction (already Homo sapiens)
             try:
-                print("[SwissTarget] Running (Homo sapiens)...")
+                print("[SwissTarget] Running (Homo sapiens)...", flush=True)
                 swisstarget_submit(driver, meta["SMILES"], species="Homo sapiens")
                 table = swisstarget_get_results(driver)
                 rows = swisstarget_parse_table(table, meta)
-                print(f"[SwissTarget] Parsed {len(rows)} human rows")
+                print(f"[SwissTarget] Parsed {len(rows)} human rows", flush=True)
                 all_rows.extend(rows)
             except Exception as e:
-                print(f"[SwissTarget] FAILED (skipping rows): {e}")
+                print(f"[SwissTarget] FAILED (skipping rows): {e}", flush=True)
 
             time.sleep(random.uniform(3, 6))
 
             # SEA (human only by _HUMAN)
             try:
-                print("[SEA] Running (human-only by _HUMAN)...")
+                print("[SEA] Running (human-only by _HUMAN)...", flush=True)
                 sea_submit(driver, meta["SMILES"])
                 table = sea_get_results(driver)
                 rows = sea_parse_table(table, meta)
-                print(f"[SEA] Parsed {len(rows)} human rows")
+                print(f"[SEA] Parsed {len(rows)} human rows", flush=True)
                 all_rows.extend(rows)
             except Exception as e:
-                print(f"[SEA] FAILED (skipping rows): {e}")
+                print(f"[SEA] FAILED (skipping rows): {e}", flush=True)
 
             # PPB3 (human only by Organism)
             try:
-                print("[PPB3] Running (Homo sapiens only by Organism column)...")
+                print("[PPB3] Running (Homo sapiens only by Organism column)...", flush=True)
                 rows = run_ppb3_for_compound(meta)
-                print(f"[PPB3] Parsed {len(rows)} human rows (across methods)")
+                print(f"[PPB3] Parsed {len(rows)} human rows (across methods)", flush=True)
                 all_rows.extend(rows)
             except Exception as e:
-                print(f"[PPB3] FAILED (skipping rows): {e}")
+                print(f"[PPB3] FAILED (skipping rows): {e}", flush=True)
 
             if i < len(compounds):
                 wait = random.uniform(args.min_wait, args.max_wait)
-                print(f"Waiting {wait:.2f}s before next compound...")
+                print(f"Waiting {wait:.2f}s before next compound...", flush=True)
                 time.sleep(wait)
 
     finally:
