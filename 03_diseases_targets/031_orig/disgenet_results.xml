@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" href="/static/images/icons/PicDisgenet.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Access the latest disease genomics data. Accelerate drug discovery and precision medicine using DISGENET, the NLP-powered platform for gene-disease associations."
+      data-rh="true"
+    />
+    <meta
+      name="keywords"
+      content="disease, genes, variants, text-mining, precision medicine, genomic database, bioinformatics, genomic platform"
+    />
+    <!-- <link rel="canonical" href="/" /> -->
+    <title>The Most Extensive & Reliable Gene-Disease Database | DISGENET</title>
+
+    <meta name="title" content="{title}" />
+
+    <!-- Import Reactome Diagram Widget Script-->
+    <script
+      type="text/javascript"
+      language="javascript"
+      src="https://reactome.org/DiagramJs/diagram/diagram.nocache.js"
+    ></script>
+
+    <!-- G3-lollipop css  -->
+    <link
+      rel="stylesheet"
+      href="https://s3-us-west-2.amazonaws.com/cdsjsd3/g3-viz/0.5.0/g3-lollipop.min.css"
+    />
+
+    <!-- D3 and G3-lollipop libraries -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/cdsjsd3/g3-viz/0.5.0/g3-lollipop.min.js"></script>
+
+    <script src="/static/js/consent/cookieconsent-custom.js"></script>
+    <script>
+      window.CookieConsent.init({
+        modalMainTextMoreLink: 'https://disgenet.com/Cookies-policy',
+        enableBarMainCookiePolicy: false,
+        barTimeout: 300,
+        theme: {
+          barColor: '#343a40',
+          barTextColor: '#FFF',
+          barMainButtonColor: '#17a2b8',
+          barMainButtonTextColor: '#fff',
+          modalMainButtonColor: '#17a2b8',
+          modalMainButtonTextColor: '#fff',
+        },
+        language: {
+          current: 'en',
+          locale: {
+            en: {
+              barMainText: `We use our own and third-party cookies to enable the website's basic functions. Preference and analytical cookies are optional and will only be installed if you give your consent. `,
+              barMainCookiePolicyLink: 'https://disgenet.com/Cookies-policy',
+              barMainCookiePolicyTitle: 'Click here for more information.',
+              barLinkSetting: 'Cookie settings',
+              barBtnAcceptAll: 'Accept all cookies',
+              modalMainTitle: 'Cookie settings',
+              modalMainText: `We use cookies to track how our Website is being used so we can optimize its functioning. For users who have created an account, the cookies save their website preferences. `,
+              modalMainTextMoreTitle: 'Click here for more information.',
+              modalBtnSave: 'Save current settings',
+              modalBtnAcceptAll: 'Accept all cookies and close',
+              modalAffectedSolutions: 'Affected solutions:',
+              learnMore: 'Learn More',
+              on: 'On',
+              off: 'Off',
+            },
+          },
+        },
+        categories: {
+          necessary: {
+            needed: true,
+            wanted: true,
+            checked: true,
+            language: {
+              locale: {
+                en: {
+                  name: 'TECHNICAL COOKIES (STRICTLY NECESSARY)',
+                  description: `These cookies are essential for the proper functioning of the website and cannot be disabled. They enable core functionalities such as security, network management and accessibility. The legal basis that allows us to collect your data through these cookies is our legitimate interest in managing our website.`,
+                },
+              },
+            },
+          },
+          preferences: {
+            needed: false,
+            wanted: false,
+            checked: false,
+            language: {
+              locale: {
+                en: {
+                  name: 'PREFERENCE COOKIES (OPTIONAL)',
+                  description: `Preference cookies are optional and require your consent. They allow the website to remember your settings or choices, such as your cookie preferences. These cookies are turned off by default. The legal basis for processing these cookies is your consent.`,
+                },
+              },
+            },
+          },
+          analytics: {
+            needed: false,
+            wanted: false,
+            checked: false,
+            language: {
+              locale: {
+                en: {
+                  name: 'ANALYTICS COOKIES (OPTIONAL)',
+                  description: `These cookies allow monitoring and analyzing the behavior of web users. The information collected through this type of cookies is used to measure the activity of the website, application, or platform and to create navigation profiles of the users of those websites, applications, and platforms, in order to improve the website and our service offerings. The legal basis that allows us to collect your data through these cookies is your consent.`,
+                },
+              },
+            },
+          },
+        },
+        // List actual services here
+        // 'dynamic-script'
+        services: {
+          googleAnalytics: {
+            category: 'analytics',
+            type: 'dynamic-script',
+            search: 'analytics',
+            cookies: [
+              {
+                name: /^_gid/,
+                domain: `.${window.location.hostname}`,
+              },
+              {
+                name: /^_ga/,
+                domain: `.${window.location.hostname}`,
+              },
+              {
+                name: /^_dc_gtm/,
+                domain: `.${window.location.hostname}`,
+              },
+            ],
+            language: {
+              locale: {
+                en: {
+                  name: 'Google Analytics',
+                },
+              },
+            },
+          },
+        },
+      });
+    </script>
+
+    <!-- Tailwind CSS stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-4.4.1.css" />
+
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="/static/fonts/font-awesome-4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" type="text/css" href="/static/css/animate.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/util.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/contacto.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/styles.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/dotMenu.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/icons.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/cookie.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/policy-update-modal.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    />
+    <script type="module" crossorigin src="/assets/index-BWO1pi6g.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/react-vendor-hwOX6iwL.js">
+    <link rel="modulepreload" crossorigin href="/assets/chart-vendor-Fa940vCC.js">
+    <link rel="modulepreload" crossorigin href="/assets/ui-vendor-CLVt6ujz.js">
+    <link rel="modulepreload" crossorigin href="/assets/aws-vendor-Db2FwXdV.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-bZ_tkmU1.css">
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+
+    <!-- Vite will inject the module script here -->
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/static/js/jquery-3.4.1.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/static/js/popper.min.js"></script>
+    <script src="/static/js/bootstrap-4.4.1.js"></script>
+    <script src="/static/js/wow.js"></script>
+    <script src="/static/js/animsition.js"></script>
+    <script src="/static/js/modernizr.js"></script>
+    <script type="text/plain" data-consent="analytics" src="/static/js/activecampaign.js"></script>
+
+    <!--===============================================================================================-->
+  </body>
+</html>

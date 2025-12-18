@@ -1,0 +1,2112 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><key id="d1" for="edge" attr.name="type" attr.type="string"/>
+<key id="d0" for="edge" attr.name="weight" attr.type="double"/>
+<graph edgedefault="undirected"><node id="MAPK1"/>
+<node id="TBX3"/>
+<node id="NFATC2"/>
+<node id="MITF"/>
+<node id="ESR2"/>
+<node id="FOXO3"/>
+<node id="BCL2"/>
+<node id="HRAS"/>
+<node id="ESR1"/>
+<node id="AKT1"/>
+<node id="KRAS"/>
+<node id="TP53"/>
+<node id="POLE2"/>
+<node id="POLD3"/>
+<node id="PRIM2"/>
+<node id="PRIM1"/>
+<node id="POLD2"/>
+<node id="POLA2"/>
+<node id="POLD1"/>
+<node id="POLA1"/>
+<node id="POLE3"/>
+<node id="POLE"/>
+<node id="CDKN1B"/>
+<node id="CDKN2A"/>
+<node id="CDK4"/>
+<node id="CDK6"/>
+<node id="MLH1"/>
+<node id="MUTYH"/>
+<node id="BRCA2"/>
+<node id="FANCD2"/>
+<node id="BRCA1"/>
+<node id="ATM"/>
+<node id="BRIP1"/>
+<node id="BLM"/>
+<node id="EXO1"/>
+<node id="MSH2"/>
+<node id="PMS2"/>
+<node id="MSH6"/>
+<node id="CHEK2"/>
+<node id="RAD51"/>
+<node id="ARID1A"/>
+<node id="NBN"/>
+<node id="BARD1"/>
+<node id="FANCM"/>
+<node id="FOXA1"/>
+<node id="AR"/>
+<node id="GATA3"/>
+<node id="ERBB3"/>
+<node id="PTEN"/>
+<node id="AFDN"/>
+<node id="FGFR4"/>
+<node id="MAP3K1"/>
+<node id="PIK3R1"/>
+<node id="ERBB2"/>
+<node id="FGFR2"/>
+<node id="PIK3CB"/>
+<node id="KIT"/>
+<node id="NF1"/>
+<node id="EGFR"/>
+<node id="PIK3CA"/>
+<node id="NOTCH2"/>
+<node id="MAML2"/>
+<node id="APC"/>
+<node id="TBL1XR1"/>
+<node id="CDH1"/>
+<node id="PTPN13"/>
+<node id="RB1"/>
+<node id="CDKN2B"/>
+<node id="MDM2"/>
+<node id="TP63"/>
+<node id="EZH2"/>
+<node id="MDM4"/>
+<node id="FANCC"/>
+<node id="RAD51C"/>
+<node id="PALB2"/>
+<node id="TUBB2B"/>
+<node id="PRC1"/>
+<node id="TUBB2A"/>
+<node id="RAD51D"/>
+<node id="RAD50"/>
+<node id="KMT2C"/>
+<node id="KDM6A"/>
+<node id="ELL"/>
+<node id="MLLT10"/>
+<node id="CDC73"/>
+<node id="POLD4"/>
+<node id="KDR"/>
+<node id="JAK1"/>
+<node id="ERBB4"/>
+<node id="MECOM"/>
+<node id="RUNX1"/>
+<node id="DNMT3A"/>
+<node id="TET2"/>
+<node id="KAT6A"/>
+<node id="NCOA2"/>
+<node id="KAT6B"/>
+<node id="NRG1"/>
+<node id="RAD51B"/>
+<node id="RECQL4"/>
+<node id="NCOR1"/>
+<node id="RXRA"/>
+<node id="NCOR2"/>
+<node id="TERT"/>
+<node id="KLF4"/>
+<node id="TOP1"/>
+<node id="STK11"/>
+<node id="PARP1"/>
+<node id="ATRX"/>
+<node id="CASP8"/>
+<node id="DROSHA"/>
+<node id="NTRK2"/>
+<node id="NTRK3"/>
+<node id="PPM1D"/>
+<node id="MEN1"/>
+<node id="PREX2"/>
+<node id="RICTOR"/>
+<node id="FKBP1A"/>
+<node id="PAX5"/>
+<node id="FLI1"/>
+<node id="MYB"/>
+<node id="YAP1"/>
+<node id="CBFB"/>
+<node id="RRM1"/>
+<node id="TYMS"/>
+<node id="TCF7L2"/>
+<node id="TOP2A"/>
+<node id="DHFR"/>
+<node id="SUZ12"/>
+<node id="ARID1B"/>
+<node id="EBF1"/>
+<node id="HIP1"/>
+<node id="CLTC"/>
+<node id="TUBB"/>
+<node id="TUBB4B"/>
+<node id="CYP19A1"/>
+<node id="TGFBR2"/>
+<node id="BMPR1A"/>
+<node id="ACVR1"/>
+<node id="MAP2K4"/>
+<node id="WWTR1"/>
+<node id="Acorus calamus"/>
+<node id="(+)-5-Epi-aristolochene"/>
+<node id="Curcuma longa"/>
+<node id="(+)-Curcumenol"/>
+<node id="Syzygium aromaticum"/>
+<node id="(+)-Endo-beta-bergamotene"/>
+<node id="Piper betel"/>
+<node id="(+)-Fenchone"/>
+<node id="Curcuma longa, Piper betel, Acorus calamus"/>
+<node id="(+)-alpha-Cadinene"/>
+<node id="(+)-alpha-Funebrene"/>
+<node id="Curcuma longa, Piper betel, Syzygium aromaticum, Acorus calamus"/>
+<node id="(+)-beta-Phellandrene"/>
+<node id="(+)-cis-Sabinol"/>
+<node id="(+)-delta-Cadinene"/>
+<node id="(+)-delta-Selinene"/>
+<node id="Piper betel, Syzygium aromaticum, Acorus calamus"/>
+<node id="(+)-gamma-Cadinene"/>
+<node id="Piper betel, Acorus calamus"/>
+<node id="(+)-gamma-Gurjunene"/>
+<node id="(-)-Acorenone"/>
+<node id="Punica granatum"/>
+<node id="(-)-Catechin"/>
+<node id="(-)-Globulol"/>
+<node id="(-)-Isoshyobunone"/>
+<node id="Syzygium aromaticum, Acorus calamus"/>
+<node id="(-)-alpha-Cadinol"/>
+<node id="(-)-alpha-Himachalene"/>
+<edge source="MAPK1" target="TBX3">
+  <data key="d0">0.911</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MAPK1" target="NFATC2">
+  <data key="d0">0.921</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MAPK1" target="MITF">
+  <data key="d0">0.932</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MAPK1" target="ESR2">
+  <data key="d0">0.948</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MAPK1" target="FOXO3">
+  <data key="d0">0.963</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MAPK1" target="BCL2">
+  <data key="d0">0.969</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MAPK1" target="HRAS">
+  <data key="d0">0.979</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MAPK1" target="ESR1">
+  <data key="d0">0.987</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MAPK1" target="AKT1">
+  <data key="d0">0.988</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MAPK1" target="KRAS">
+  <data key="d0">0.988</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MAPK1" target="TP53">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR2" target="NCOR1">
+  <data key="d0">0.97</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR2" target="NCOR2">
+  <data key="d0">0.908</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR2" target="CYP19A1">
+  <data key="d0">0.925</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR2" target="NCOA2">
+  <data key="d0">0.993</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR2" target="ESR1">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FOXO3" target="CDKN1B">
+  <data key="d0">0.98</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FOXO3" target="MDM2">
+  <data key="d0">0.995</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FOXO3" target="TP53">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FOXO3" target="FANCD2">
+  <data key="d0">0.9</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FOXO3" target="RUNX1">
+  <data key="d0">0.908</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FOXO3" target="STK11">
+  <data key="d0">0.96</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FOXO3" target="AKT1">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BCL2" target="MDM2">
+  <data key="d0">0.953</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BCL2" target="TP53">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BCL2" target="CASP8">
+  <data key="d0">0.984</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BCL2" target="PARP1">
+  <data key="d0">0.917</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BCL2" target="HRAS">
+  <data key="d0">0.938</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BCL2" target="AKT1">
+  <data key="d0">0.993</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="HRAS" target="KRAS">
+  <data key="d0">0.992</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="HRAS" target="PIK3CA">
+  <data key="d0">0.995</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="HRAS" target="TP53">
+  <data key="d0">0.925</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="HRAS" target="ERBB2">
+  <data key="d0">0.907</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="HRAS" target="EGFR">
+  <data key="d0">0.994</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="HRAS" target="KIT">
+  <data key="d0">0.962</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="HRAS" target="FGFR4">
+  <data key="d0">0.943</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="HRAS" target="NF1">
+  <data key="d0">0.994</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="HRAS" target="AFDN">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="HRAS" target="MAP3K1">
+  <data key="d0">0.945</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="HRAS" target="FGFR2">
+  <data key="d0">0.961</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="HRAS" target="PIK3CB">
+  <data key="d0">0.963</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="HRAS" target="CDKN2A">
+  <data key="d0">0.99</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="HRAS" target="PIK3R1">
+  <data key="d0">0.99</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="FOXA1">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="MDM2">
+  <data key="d0">0.946</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="PIK3CA">
+  <data key="d0">0.941</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="NCOR1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="TP53">
+  <data key="d0">0.992</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="ERBB2">
+  <data key="d0">0.976</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="EGFR">
+  <data key="d0">0.988</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="EZH2">
+  <data key="d0">0.915</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="MEN1">
+  <data key="d0">0.923</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="ERBB4">
+  <data key="d0">0.961</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="AR">
+  <data key="d0">0.981</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="GATA3">
+  <data key="d0">0.982</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="CYP19A1">
+  <data key="d0">0.927</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="NCOR2">
+  <data key="d0">0.993</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="NCOA2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="AKT1">
+  <data key="d0">0.913</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="PIK3R1">
+  <data key="d0">0.994</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ESR1" target="BRCA1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AKT1" target="CDKN1B">
+  <data key="d0">0.996</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AKT1" target="KRAS">
+  <data key="d0">0.904</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AKT1" target="MDM2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AKT1" target="CDH1">
+  <data key="d0">0.903</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AKT1" target="PIK3CA">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AKT1" target="TP53">
+  <data key="d0">0.994</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AKT1" target="RICTOR">
+  <data key="d0">0.992</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AKT1" target="TERT">
+  <data key="d0">0.903</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AKT1" target="PTEN">
+  <data key="d0">0.988</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AKT1" target="MAP2K4">
+  <data key="d0">0.965</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AKT1" target="BRCA1">
+  <data key="d0">0.993</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AKT1" target="PIK3R1">
+  <data key="d0">0.995</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AKT1" target="PIK3CB">
+  <data key="d0">0.992</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KRAS" target="ERBB3">
+  <data key="d0">0.919</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KRAS" target="PTEN">
+  <data key="d0">0.936</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KRAS" target="AFDN">
+  <data key="d0">0.945</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KRAS" target="FGFR4">
+  <data key="d0">0.948</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KRAS" target="TP53">
+  <data key="d0">0.949</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KRAS" target="MAP3K1">
+  <data key="d0">0.953</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KRAS" target="PIK3R1">
+  <data key="d0">0.963</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KRAS" target="ERBB2">
+  <data key="d0">0.966</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KRAS" target="FGFR2">
+  <data key="d0">0.973</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KRAS" target="PIK3CB">
+  <data key="d0">0.973</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KRAS" target="KIT">
+  <data key="d0">0.976</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KRAS" target="CDKN2A">
+  <data key="d0">0.992</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KRAS" target="NF1">
+  <data key="d0">0.996</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KRAS" target="EGFR">
+  <data key="d0">0.997</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KRAS" target="PIK3CA">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="CDKN1B">
+  <data key="d0">0.991</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="MLH1">
+  <data key="d0">0.965</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="MSH2">
+  <data key="d0">0.974</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="CDK4">
+  <data key="d0">0.966</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="MDM2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="BARD1">
+  <data key="d0">0.982</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="PIK3CA">
+  <data key="d0">0.941</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="TP63">
+  <data key="d0">0.953</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="PMS2">
+  <data key="d0">0.936</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="RB1">
+  <data key="d0">0.936</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="TERT">
+  <data key="d0">0.902</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="AR">
+  <data key="d0">0.905</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="KLF4">
+  <data key="d0">0.925</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="BLM">
+  <data key="d0">0.932</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="ERBB2">
+  <data key="d0">0.935</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="EGFR">
+  <data key="d0">0.943</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="TOP1">
+  <data key="d0">0.947</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="ARID1A">
+  <data key="d0">0.961</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="STK11">
+  <data key="d0">0.97</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="PARP1">
+  <data key="d0">0.972</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="ATRX">
+  <data key="d0">0.981</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="CASP8">
+  <data key="d0">0.991</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="BRCA2">
+  <data key="d0">0.995</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="DROSHA">
+  <data key="d0">0.996</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="ATM">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="MDM4">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="CHEK2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="BRCA1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="CDKN2A">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="PTEN">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TP53" target="RAD51">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLE2" target="POLD3">
+  <data key="d0">0.961</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLE2" target="PRIM2">
+  <data key="d0">0.986</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLE2" target="PRIM1">
+  <data key="d0">0.986</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLE2" target="POLD2">
+  <data key="d0">0.987</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLE2" target="POLA2">
+  <data key="d0">0.991</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLE2" target="POLD1">
+  <data key="d0">0.992</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLE2" target="POLA1">
+  <data key="d0">0.996</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLE2" target="POLE3">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLE2" target="POLE">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD3" target="PRIM2">
+  <data key="d0">0.943</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD3" target="PRIM1">
+  <data key="d0">0.948</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD3" target="POLE3">
+  <data key="d0">0.952</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD3" target="POLA2">
+  <data key="d0">0.953</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD3" target="POLE">
+  <data key="d0">0.963</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD3" target="POLA1">
+  <data key="d0">0.985</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD3" target="POLD2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD3" target="POLD1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD3" target="POLD4">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PRIM2" target="POLA2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PRIM2" target="POLE">
+  <data key="d0">0.988</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PRIM2" target="PRIM1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PRIM2" target="POLE3">
+  <data key="d0">0.967</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PRIM2" target="POLA1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PRIM2" target="POLD1">
+  <data key="d0">0.992</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PRIM2" target="POLD2">
+  <data key="d0">0.969</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PRIM1" target="POLA2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PRIM1" target="POLE">
+  <data key="d0">0.99</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PRIM1" target="POLE3">
+  <data key="d0">0.95</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PRIM1" target="POLD2">
+  <data key="d0">0.961</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PRIM1" target="POLD1">
+  <data key="d0">0.99</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PRIM1" target="POLA1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD2" target="POLA2">
+  <data key="d0">0.987</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD2" target="POLD4">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD2" target="POLE">
+  <data key="d0">0.991</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD2" target="EXO1">
+  <data key="d0">0.902</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD2" target="POLE3">
+  <data key="d0">0.97</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD2" target="POLA1">
+  <data key="d0">0.993</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD2" target="POLD1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLA2" target="POLE3">
+  <data key="d0">0.97</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLA2" target="POLE">
+  <data key="d0">0.993</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLA2" target="POLD1">
+  <data key="d0">0.994</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLA2" target="POLA1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD1" target="MLH1">
+  <data key="d0">0.944</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD1" target="MSH2">
+  <data key="d0">0.994</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD1" target="MSH6">
+  <data key="d0">0.995</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD1" target="PMS2">
+  <data key="d0">0.961</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD1" target="ATM">
+  <data key="d0">0.96</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD1" target="POLD4">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD1" target="POLE">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD1" target="EXO1">
+  <data key="d0">0.95</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD1" target="POLE3">
+  <data key="d0">0.985</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD1" target="POLA1">
+  <data key="d0">0.989</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD1" target="BRCA1">
+  <data key="d0">0.937</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLD1" target="RAD51">
+  <data key="d0">0.921</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLA1" target="POLE">
+  <data key="d0">0.997</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLA1" target="POLE3">
+  <data key="d0">0.985</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLE3" target="POLE">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLE" target="MSH2">
+  <data key="d0">0.947</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLE" target="MSH6">
+  <data key="d0">0.957</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="POLE" target="BRCA1">
+  <data key="d0">0.919</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDKN1B" target="CDKN2A">
+  <data key="d0">0.93</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDKN1B" target="CDK4">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDKN1B" target="CDK6">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDKN2A" target="CDK4">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDKN2A" target="MDM2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDKN2A" target="CDK6">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDKN2A" target="EGFR">
+  <data key="d0">0.91</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDKN2A" target="CDKN2B">
+  <data key="d0">0.951</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDKN2A" target="MDM4">
+  <data key="d0">0.963</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDKN2A" target="PTEN">
+  <data key="d0">0.923</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDK4" target="RAD51">
+  <data key="d0">0.913</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDK4" target="ATM">
+  <data key="d0">0.937</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDK4" target="BRCA2">
+  <data key="d0">0.943</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDK4" target="BRCA1">
+  <data key="d0">0.972</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDK4" target="RB1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDK4" target="CDK6">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDK4" target="CDKN2B">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDK6" target="RUNX1">
+  <data key="d0">0.929</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDK6" target="RB1">
+  <data key="d0">0.997</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDK6" target="CDKN2B">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MLH1" target="MUTYH">
+  <data key="d0">0.92</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MLH1" target="BRCA2">
+  <data key="d0">0.954</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MLH1" target="FANCD2">
+  <data key="d0">0.971</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MLH1" target="BRCA1">
+  <data key="d0">0.994</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MLH1" target="ATM">
+  <data key="d0">0.997</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MLH1" target="BRIP1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MLH1" target="BLM">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MLH1" target="EXO1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MLH1" target="MSH2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MLH1" target="PMS2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MLH1" target="MSH6">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MUTYH" target="MSH2">
+  <data key="d0">0.946</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MUTYH" target="MSH6">
+  <data key="d0">0.982</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MUTYH" target="PMS2">
+  <data key="d0">0.904</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="MSH2">
+  <data key="d0">0.968</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="MSH6">
+  <data key="d0">0.967</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="BRIP1">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="BARD1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="PALB2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="NBN">
+  <data key="d0">0.901</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="PMS2">
+  <data key="d0">0.947</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="FANCM">
+  <data key="d0">0.937</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="ATM">
+  <data key="d0">0.995</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="FANCD2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="FANCC">
+  <data key="d0">0.919</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="RAD51C">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="BLM">
+  <data key="d0">0.935</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="EXO1">
+  <data key="d0">0.951</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="PARP1">
+  <data key="d0">0.985</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="RAD51B">
+  <data key="d0">0.961</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="RAD51D">
+  <data key="d0">0.983</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="CHEK2">
+  <data key="d0">0.985</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="RAD51">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA2" target="BRCA1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCD2" target="MSH2">
+  <data key="d0">0.957</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCD2" target="BRIP1">
+  <data key="d0">0.997</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCD2" target="PALB2">
+  <data key="d0">0.991</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCD2" target="FANCM">
+  <data key="d0">0.997</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCD2" target="ATM">
+  <data key="d0">0.989</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCD2" target="MEN1">
+  <data key="d0">0.913</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCD2" target="BLM">
+  <data key="d0">0.933</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCD2" target="RAD51C">
+  <data key="d0">0.934</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCD2" target="RAD51">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCD2" target="FANCC">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCD2" target="BRCA1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="MSH2">
+  <data key="d0">0.994</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="MSH6">
+  <data key="d0">0.996</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="BRIP1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="BARD1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="PALB2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="NBN">
+  <data key="d0">0.993</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="PMS2">
+  <data key="d0">0.95</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="FANCM">
+  <data key="d0">0.916</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="ERBB2">
+  <data key="d0">0.918</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="ATM">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="FANCC">
+  <data key="d0">0.926</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="EZH2">
+  <data key="d0">0.926</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="RAD51C">
+  <data key="d0">0.98</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="BLM">
+  <data key="d0">0.974</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="EXO1">
+  <data key="d0">0.981</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="PARP1">
+  <data key="d0">0.974</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="AR">
+  <data key="d0">0.908</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="RAD50">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="CHEK2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="RAD51B">
+  <data key="d0">0.922</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="DROSHA">
+  <data key="d0">0.944</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="RAD51D">
+  <data key="d0">0.953</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRCA1" target="RAD51">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="MSH2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="MSH6">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="MDM2">
+  <data key="d0">0.995</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="BRIP1">
+  <data key="d0">0.933</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="BARD1">
+  <data key="d0">0.946</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="PALB2">
+  <data key="d0">0.945</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="NBN">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="RAD51C">
+  <data key="d0">0.921</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="PPM1D">
+  <data key="d0">0.924</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="RAD51D">
+  <data key="d0">0.93</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="MDM4">
+  <data key="d0">0.954</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="CASP8">
+  <data key="d0">0.961</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="EXO1">
+  <data key="d0">0.963</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="RAD50">
+  <data key="d0">0.99</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="BLM">
+  <data key="d0">0.991</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="RAD51">
+  <data key="d0">0.995</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ATM" target="CHEK2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRIP1" target="FANCC">
+  <data key="d0">0.913</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRIP1" target="RAD51C">
+  <data key="d0">0.941</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRIP1" target="BLM">
+  <data key="d0">0.95</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRIP1" target="RAD51">
+  <data key="d0">0.951</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRIP1" target="FANCM">
+  <data key="d0">0.969</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRIP1" target="PMS2">
+  <data key="d0">0.993</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRIP1" target="PALB2">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRIP1" target="NBN">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BRIP1" target="BARD1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BLM" target="MSH2">
+  <data key="d0">0.907</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BLM" target="MSH6">
+  <data key="d0">0.972</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BLM" target="NBN">
+  <data key="d0">0.925</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BLM" target="FANCM">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BLM" target="RAD50">
+  <data key="d0">0.92</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BLM" target="RAD51">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BLM" target="EXO1">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="EXO1" target="MSH2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="EXO1" target="MSH6">
+  <data key="d0">0.996</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="EXO1" target="PMS2">
+  <data key="d0">0.995</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="EXO1" target="RECQL4">
+  <data key="d0">0.981</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="EXO1" target="RAD51">
+  <data key="d0">0.997</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MSH2" target="CHEK2">
+  <data key="d0">0.934</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MSH2" target="RAD51">
+  <data key="d0">0.944</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MSH2" target="ARID1A">
+  <data key="d0">0.974</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MSH2" target="PMS2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MSH2" target="MSH6">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PMS2" target="MSH6">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PMS2" target="PALB2">
+  <data key="d0">0.947</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MSH6" target="NBN">
+  <data key="d0">0.907</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MSH6" target="BARD1">
+  <data key="d0">0.925</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MSH6" target="FANCM">
+  <data key="d0">0.927</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CHEK2" target="MDM2">
+  <data key="d0">0.983</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CHEK2" target="BARD1">
+  <data key="d0">0.937</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CHEK2" target="PALB2">
+  <data key="d0">0.921</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CHEK2" target="NBN">
+  <data key="d0">0.935</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CHEK2" target="PPM1D">
+  <data key="d0">0.918</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CHEK2" target="MDM4">
+  <data key="d0">0.92</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CHEK2" target="RAD51">
+  <data key="d0">0.93</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RAD51" target="BARD1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RAD51" target="PALB2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RAD51" target="NBN">
+  <data key="d0">0.925</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RAD51" target="FANCM">
+  <data key="d0">0.973</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RAD51" target="RAD51C">
+  <data key="d0">0.996</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RAD51" target="ATRX">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RAD51" target="RAD51B">
+  <data key="d0">0.904</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RAD51" target="RECQL4">
+  <data key="d0">0.982</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ARID1A" target="PIK3CA">
+  <data key="d0">0.913</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ARID1A" target="ARID1B">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="NBN" target="BARD1">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="NBN" target="RAD50">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BARD1" target="RAD51D">
+  <data key="d0">0.94</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BARD1" target="RAD51C">
+  <data key="d0">0.967</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BARD1" target="PALB2">
+  <data key="d0">0.987</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BARD1" target="RAD50">
+  <data key="d0">0.997</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCM" target="PALB2">
+  <data key="d0">0.94</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCM" target="RAD51B">
+  <data key="d0">0.958</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCM" target="RAD51C">
+  <data key="d0">0.96</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCM" target="RAD51D">
+  <data key="d0">0.979</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCM" target="RECQL4">
+  <data key="d0">0.991</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCM" target="FANCC">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FOXA1" target="AR">
+  <data key="d0">0.996</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FOXA1" target="GATA3">
+  <data key="d0">0.997</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AR" target="MDM2">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AR" target="NCOR1">
+  <data key="d0">0.991</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AR" target="EZH2">
+  <data key="d0">0.978</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AR" target="NCOR2">
+  <data key="d0">0.971</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="AR" target="NCOA2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="GATA3" target="RUNX1">
+  <data key="d0">0.989</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB3" target="PIK3CA">
+  <data key="d0">0.993</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB3" target="JAK1">
+  <data key="d0">0.947</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB3" target="PIK3CB">
+  <data key="d0">0.966</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB3" target="PIK3R1">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB3" target="ERBB4">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB3" target="EGFR">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB3" target="NRG1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB3" target="ERBB2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PTEN" target="MDM2">
+  <data key="d0">0.902</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PTEN" target="CDH1">
+  <data key="d0">0.93</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PTEN" target="PIK3CA">
+  <data key="d0">0.995</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PTEN" target="EGFR">
+  <data key="d0">0.969</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PTEN" target="PREX2">
+  <data key="d0">0.99</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PTEN" target="STK11">
+  <data key="d0">0.979</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PTEN" target="PIK3CB">
+  <data key="d0">0.984</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PTEN" target="PIK3R1">
+  <data key="d0">0.997</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MAP3K1" target="MAP2K4">
+  <data key="d0">0.995</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3R1" target="KDR">
+  <data key="d0">0.943</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3R1" target="PIK3CA">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3R1" target="ERBB2">
+  <data key="d0">0.995</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3R1" target="EGFR">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3R1" target="KIT">
+  <data key="d0">0.995</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3R1" target="ERBB4">
+  <data key="d0">0.948</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3R1" target="FGFR2">
+  <data key="d0">0.924</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3R1" target="JAK1">
+  <data key="d0">0.939</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3R1" target="PIK3CB">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB2" target="CDH1">
+  <data key="d0">0.97</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB2" target="PIK3CA">
+  <data key="d0">0.992</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB2" target="JAK1">
+  <data key="d0">0.959</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB2" target="PIK3CB">
+  <data key="d0">0.972</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB2" target="ERBB4">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB2" target="NRG1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB2" target="EGFR">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FGFR2" target="PIK3CA">
+  <data key="d0">0.908</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FGFR2" target="JAK1">
+  <data key="d0">0.913</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3CB" target="KDR">
+  <data key="d0">0.932</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3CB" target="PIK3CA">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3CB" target="EGFR">
+  <data key="d0">0.993</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3CB" target="KIT">
+  <data key="d0">0.961</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3CB" target="ERBB4">
+  <data key="d0">0.947</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3CB" target="JAK1">
+  <data key="d0">0.933</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KIT" target="PIK3CA">
+  <data key="d0">0.986</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="EGFR" target="CDH1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="EGFR" target="PIK3CA">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="EGFR" target="JAK1">
+  <data key="d0">0.97</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="EGFR" target="ERBB4">
+  <data key="d0">0.996</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="EGFR" target="NRG1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3CA" target="KDR">
+  <data key="d0">0.975</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3CA" target="JAK1">
+  <data key="d0">0.969</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PIK3CA" target="ERBB4">
+  <data key="d0">0.97</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="NOTCH2" target="MAML2">
+  <data key="d0">0.968</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="APC" target="TBL1XR1">
+  <data key="d0">0.903</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="APC" target="CDH1">
+  <data key="d0">0.92</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="APC" target="PTPN13">
+  <data key="d0">0.929</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TBL1XR1" target="NCOR1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TBL1XR1" target="NCOR2">
+  <data key="d0">0.989</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDH1" target="MDM2">
+  <data key="d0">0.925</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RB1" target="MDM2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MDM2" target="TP63">
+  <data key="d0">0.9</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MDM2" target="EZH2">
+  <data key="d0">0.945</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MDM2" target="MDM4">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="EZH2" target="DNMT3A">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="EZH2" target="SUZ12">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="EZH2" target="ATRX">
+  <data key="d0">0.933</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="EZH2" target="KDM6A">
+  <data key="d0">0.965</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FANCC" target="PALB2">
+  <data key="d0">0.908</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RAD51C" target="PALB2">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RAD51C" target="RAD51B">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RAD51C" target="RAD51D">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PALB2" target="RAD51D">
+  <data key="d0">0.949</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TUBB2B" target="PRC1">
+  <data key="d0">0.924</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TUBB2B" target="TUBB2A">
+  <data key="d0">0.933</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PRC1" target="TOP2A">
+  <data key="d0">0.932</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RAD51D" target="RAD51B">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KMT2C" target="KDM6A">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KDM6A" target="SUZ12">
+  <data key="d0">0.912</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ELL" target="MLLT10">
+  <data key="d0">0.916</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ELL" target="CDC73">
+  <data key="d0">0.919</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="CDC73" target="MEN1">
+  <data key="d0">0.912</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KDR" target="JAK1">
+  <data key="d0">0.947</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB4" target="NRG1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="ERBB4" target="YAP1">
+  <data key="d0">0.994</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="MECOM" target="RUNX1">
+  <data key="d0">0.988</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RUNX1" target="KAT6A">
+  <data key="d0">0.959</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RUNX1" target="PAX5">
+  <data key="d0">0.92</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RUNX1" target="FLI1">
+  <data key="d0">0.921</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RUNX1" target="MYB">
+  <data key="d0">0.936</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RUNX1" target="YAP1">
+  <data key="d0">0.936</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RUNX1" target="CBFB">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="DNMT3A" target="TET2">
+  <data key="d0">0.946</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TET2" target="EBF1">
+  <data key="d0">0.976</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KAT6A" target="NCOA2">
+  <data key="d0">0.991</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="KAT6A" target="KAT6B">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="NCOA2" target="NCOR1">
+  <data key="d0">0.9</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="NCOA2" target="RXRA">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="NCOR1" target="RXRA">
+  <data key="d0">0.977</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="NCOR1" target="NCOR2">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RXRA" target="NCOR2">
+  <data key="d0">0.996</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TERT" target="TCF7L2">
+  <data key="d0">0.919</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TOP1" target="PARP1">
+  <data key="d0">0.936</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TOP1" target="TOP2A">
+  <data key="d0">0.994</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="NTRK2" target="NTRK3">
+  <data key="d0">0.969</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RICTOR" target="FKBP1A">
+  <data key="d0">0.923</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="FKBP1A" target="ACVR1">
+  <data key="d0">0.998</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="PAX5" target="EBF1">
+  <data key="d0">0.985</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="YAP1" target="TGFBR2">
+  <data key="d0">0.932</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="YAP1" target="WWTR1">
+  <data key="d0">0.956</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="YAP1" target="TCF7L2">
+  <data key="d0">0.911</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="RRM1" target="TYMS">
+  <data key="d0">0.976</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TYMS" target="TOP2A">
+  <data key="d0">0.96</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TYMS" target="DHFR">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="HIP1" target="CLTC">
+  <data key="d0">0.98</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="TUBB" target="TUBB4B">
+  <data key="d0">0.986</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="BMPR1A" target="ACVR1">
+  <data key="d0">0.999</data>
+  <data key="d1">ppi</data>
+</edge>
+<edge source="Acorus calamus" target="(+)-5-Epi-aristolochene">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Acorus calamus" target="(+)-alpha-Funebrene">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Acorus calamus" target="(+)-delta-Selinene">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Acorus calamus" target="(-)-Acorenone">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Acorus calamus" target="(-)-Globulol">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Acorus calamus" target="(-)-Isoshyobunone">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Acorus calamus" target="(-)-alpha-Himachalene">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Curcuma longa" target="(+)-Curcumenol">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Curcuma longa" target="(+)-cis-Sabinol">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Syzygium aromaticum" target="(+)-Endo-beta-bergamotene">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Piper betel" target="(+)-Fenchone">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Curcuma longa, Piper betel, Acorus calamus" target="(+)-alpha-Cadinene">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Curcuma longa, Piper betel, Syzygium aromaticum, Acorus calamus" target="(+)-beta-Phellandrene">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Curcuma longa, Piper betel, Syzygium aromaticum, Acorus calamus" target="(+)-delta-Cadinene">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Piper betel, Syzygium aromaticum, Acorus calamus" target="(+)-gamma-Cadinene">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Piper betel, Acorus calamus" target="(+)-gamma-Gurjunene">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Punica granatum" target="(-)-Catechin">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+<edge source="Syzygium aromaticum, Acorus calamus" target="(-)-alpha-Cadinol">
+  <data key="d0">1.0</data>
+  <data key="d1">plant-ing</data>
+</edge>
+</graph></graphml>
