@@ -619,7 +619,13 @@ def main():
 
     all_rows: List[Dict[str, Any]] = []
 
-    driver = setup_driver(headless=args.headless)
+    # Try setting up driver, proceed without it if it fails (run only PPB3)
+    try:
+        driver = setup_driver(headless=args.headless)
+    except Exception as e:
+        print(f"WARNING: Could not set up Selenium Driver (Chrome). Skipping Swiss/SEA. Error: {e}")
+        driver = None
+
     try:
         for i, meta in enumerate(compounds, start=1):
             print("\n" + "=" * 70)
@@ -628,28 +634,31 @@ def main():
             print("=" * 70)
 
             # SwissTargetPrediction (already Homo sapiens)
-            try:
-                print("[SwissTarget] Running (Homo sapiens)...", flush=True)
-                swisstarget_submit(driver, meta["SMILES"], species="Homo sapiens")
-                table = swisstarget_get_results(driver)
-                rows = swisstarget_parse_table(table, meta)
-                print(f"[SwissTarget] Parsed {len(rows)} human rows", flush=True)
-                all_rows.extend(rows)
-            except Exception as e:
-                print(f"[SwissTarget] FAILED (skipping rows): {e}", flush=True)
+            if driver:
+                try:
+                    print("[SwissTarget] Running (Homo sapiens)...", flush=True)
+                    swisstarget_submit(driver, meta["SMILES"], species="Homo sapiens")
+                    table = swisstarget_get_results(driver)
+                    rows = swisstarget_parse_table(table, meta)
+                    print(f"[SwissTarget] Parsed {len(rows)} human rows", flush=True)
+                    all_rows.extend(rows)
+                except Exception as e:
+                    print(f"[SwissTarget] FAILED (skipping rows): {e}", flush=True)
 
-            time.sleep(random.uniform(3, 6))
+                time.sleep(random.uniform(3, 6))
 
-            # SEA (human only by _HUMAN)
-            try:
-                print("[SEA] Running (human-only by _HUMAN)...", flush=True)
-                sea_submit(driver, meta["SMILES"])
-                table = sea_get_results(driver)
-                rows = sea_parse_table(table, meta)
-                print(f"[SEA] Parsed {len(rows)} human rows", flush=True)
-                all_rows.extend(rows)
-            except Exception as e:
-                print(f"[SEA] FAILED (skipping rows): {e}", flush=True)
+                # SEA (human only by _HUMAN)
+                try:
+                    print("[SEA] Running (human-only by _HUMAN)...", flush=True)
+                    sea_submit(driver, meta["SMILES"])
+                    table = sea_get_results(driver)
+                    rows = sea_parse_table(table, meta)
+                    print(f"[SEA] Parsed {len(rows)} human rows", flush=True)
+                    all_rows.extend(rows)
+                except Exception as e:
+                    print(f"[SEA] FAILED (skipping rows): {e}", flush=True)
+            else:
+                print("[SwissTarget/SEA] Skipped (No Selenium Driver)", flush=True)
 
             # PPB3 (human only by Organism)
             try:
@@ -666,7 +675,8 @@ def main():
                 time.sleep(wait)
 
     finally:
-        driver.quit()
+        if driver:
+            driver.quit()
 
     save_outputs(all_rows, args.output)
     print("Done.")
