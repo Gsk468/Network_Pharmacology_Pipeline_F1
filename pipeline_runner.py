@@ -5,31 +5,7 @@ import sys
 
 
 # --- Cell 0 ---
-# Install dependencies - Split to ensure critical packages install even if some optional ones fail
-# Core data processing
-# Skipped: !pip install pandas numpy openpyxl requests tqdm beautifulsoup4
-# Network analysis
-# Skipped: !pip install networkx matplotlib
-# Target Prediction (Selenium)
-# Skipped: !pip install selenium webdriver-manager
-# Chemical Informatics
-# Skipped: !pip install pubchempy chardet
-# Visualization (Optional)
-try:
-    # Skipped: !pip install matplotlib-venn
-    pass
-except:
-    print('Warning: matplotlib-venn installation failed')
-# Bioinformatics (Optional/Advanced) - may fail on newer Python versions due to 'line-profiler' build issues
-try:
-    # Skipped: !pip install bioservices
-    pass
-except:
-    print('Warning: bioservices installation failed. Some UniProt mapping features might be limited.')
-
-
-# --- Cell 1 ---
-# Import necessary libraries
+from bioservices import UniProt
 import os
 import glob
 import numpy as np
@@ -46,118 +22,327 @@ import xml.etree.ElementTree as ET
 import openpyxl
 import chardet
 import json
+import subprocess
 import sys
+import time
 from time import sleep
-try:
-    from matplotlib_venn import venn2
-except ImportError:
-    print('matplotlib_venn not found, venn diagram plotting might fail.')
+import chardet
+from matplotlib_venn import venn2
 import matplotlib.pyplot as plt
 import networkx as nx
 from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
-try:
-    from bioservices import UniProt
-except ImportError:
-    print('bioservices not found, uniprot mapping might be limited.')
 
 
-# --- Cell 2 ---
-# Configuration
-DISEASE_NAME = "Breast Cancer" # Option to select disease name
-
-# Thresholds for Target Prediction
-# Note: SwissTarget and PPB3 use Probability (Higher is better, 0.0-1.0)
-#       SEA uses P-Value (Lower is better) and MaxTC (Higher is better)
-SWISS_THRESHOLD = 0.0
-PPB3_THRESHOLD = 0.0
-SEA_PVAL_THRESHOLD = 0.05
-SEA_MAXTC_THRESHOLD = 0.57 # Filter for SEA Max Tanimoto Coefficient
-
-print(f"Selected Disease: {DISEASE_NAME}")
-print(f"Thresholds: Swiss>={SWISS_THRESHOLD}, PPB3>={PPB3_THRESHOLD}, SEA(P)<={SEA_PVAL_THRESHOLD}, SEA(MaxTC)>={SEA_MAXTC_THRESHOLD}")
+# --- Cell 4 ---
+# 添加路径到 sys.path
+sys.path.append(r'c:\users\cdzyy\appdata\roaming\python\python39\site-packages')
+from herbiv import analysis
 
 
-# --- Cell 3 ---
-# Load data from Sample-Plant-smiles.xlsx and preserve Plant info
-import os
-import pandas as pd
-print('Loading data from Sample-Plant-smiles.xlsx...')
-try:
-    input_df = pd.read_excel('Sample-Plant-smiles.xlsx')
-    print('Data loaded successfully. Head:')
-    print(input_df.head())
 
-    # Prepare dataframe for subsequent steps
-    processed_df = pd.DataFrame()
-    # Map columns: Phytochemical -> Ingredient name, SMILES -> SMILES, CID -> Pubchem_CID
-    processed_df['Ingredient name'] = input_df['Phytochemical']
-    processed_df['SMILES'] = input_df['SMILES']
-    processed_df['Pubchem_CID'] = input_df['CID']
-    processed_df['Plant'] = input_df['Plant'] # Preserve Plant column
-    processed_df['molecular_formula'] = ''
-
-    # Ensure output directory exists
-    input_for_step2 = '01_drug_ingredients/05.merge/no_duplicates/Ingredient_smiles.csv'
-    os.makedirs(os.path.dirname(input_for_step2), exist_ok=True)
-
-    processed_df.to_csv(input_for_step2, index=False)
-    print(f'Processed data prepared for Step 2: {input_for_step2}')
-
-    # Prepare SMILES list for target_prediction.py
-    smiles_file = '01_drug_ingredients/smiles_list.txt'
-    with open(smiles_file, 'w') as f:
-        for smile in processed_df['SMILES']:
-            if pd.notna(smile):
-                f.write(str(smile).strip() + '\n')
-    print(f'SMILES list prepared for target prediction: {smiles_file}')
-
-except FileNotFoundError:
-    print('Error: Sample-Plant-smiles.xlsx not found. Please ensure the file exists.')
-except Exception as e:
-    print(f'An error occurred: {e}')
+tcm, tcm_chem_links, chem, chem_protein_links, proteins = analysis.from_tcm(['柴胡', '黄芩'])
+tcm
+chem.head()
+chem_protein_links.head()
+proteins.head()
 
 
-# --- Cell 9 ---
+# --- Cell 7 ---
+
+def get_encoding(file_path): # 获取文本文件的编码格式
+    with open(file_path, 'rb') as f:
+        result = chardet.detect(f.read())
+    return result['encoding'] #
+
+def merge_files(input_folder, output_folder): # 合并文件夹中的所有文件
+    for subdir, _, _ in os.walk(input_folder):
+        if subdir == input_folder:
+            continue
+
+        folder_name = os.path.basename(subdir) # 获取子文件夹的名称
+        output_file = os.path.join(output_folder, f"{folder_name}.csv") # 合并后的文件名
+
+        files = glob.glob(f"{subdir}/*.xlsx") + glob.glob(f"{subdir}/*.txt") # 获取子文件夹中的所有文件
+        combined_data = []
+
+        for file in files: # 读取文件
+            if file.endswith('.xlsx') and not os.path.basename(file).startswith('~$'): # 如果是Excel文件
+                data = pd.read_excel(file, dtype=str, engine='openpyxl')
+            elif file.endswith('.txt'): # 如果是文本文件
+                encoding = get_encoding(file)
+                data = pd.read_csv(file, sep="\t", dtype=str, encoding=encoding) # 如果文本文件使用了其他分隔符，请修改这里
+            else:
+                continue
+
+            filename = os.path.splitext(os.path.basename(file))[0] # 获取文件名
+            data.insert(0, 'herb_name', filename)
+            combined_data.append(data)
+
+        merged_data = pd.concat(combined_data, ignore_index=True) # 合并数据
+        merged_data.to_csv(output_file, index=False, encoding='utf-8-sig') # 保存数据
+
+input_folder = '01.Drug_Ingredients/01.ingredients_rawdata'
+output_folder = '01.Drug_Ingredients/02.ingredients_preprocesseddata'
+os.makedirs(output_folder, exist_ok=True) # 创建输出文件夹
+merge_files(input_folder, output_folder)
+
+
+# --- Cell 10 ---
+input_file = r"01.Drug_Ingredients\02.ingredients_preprocesseddata\02.HERB.csv"
+herb_info_file = r"HERB_ingredient_info_v2.xlsx"
+output_folder = r"01.Drug_Ingredients\03.ingredients_augmenteddata"
+
+os.makedirs(output_folder, exist_ok=True)
+
+def merge_csv_and_xlsx(input_file, herb_info_file, output_folder):
+    # 读取herb_ingredient_info文件
+    herb_ingredient_info = pd.read_excel(herb_info_file)
+
+    # 读取输入CSV文件
+    df = pd.read_csv(input_file)
+
+    # 保留原有的 "Ingredient id" 列
+    df_ingredient_ids = df['Ingredient id']
+
+    # 仅保留在当前表格中出现的 "Ingredient_id"
+    herb_ingredient_info_filtered = herb_ingredient_info[herb_ingredient_info['Ingredient_id'].isin(df_ingredient_ids)]
+
+    # 按照 'Ingredient id' 和 'Ingredient_id' 列合并两个表格
+    merged_data = df.merge(herb_ingredient_info_filtered, left_on='Ingredient id', right_on='Ingredient_id', how='left')
+
+    # 删除重复的 'Ingredient_id' 列
+    merged_data.drop(columns=['Ingredient_id'], inplace=True)
+
+    # 将合并后的数据保存到输出文件夹中
+    output_file_name = os.path.join(output_folder, "HERB_augmented.csv")
+    merged_data.to_csv(output_file_name, index=False, encoding='utf-8-sig')
+    print(f"Processed {os.path.basename(input_file)} and saved to {output_file_name}")
+
+merge_csv_and_xlsx(input_file, herb_info_file, output_folder)
+
+
+# --- Cell 12 ---
+
+def get_cid_and_smiles(compound_name, aliases, molecular_formula):
+    try:
+        # 首先使用化合物名称和分子式进行查询
+        results = pcp.get_compounds(compound_name, namespace='name')
+        results = [compound for compound in results if compound.molecular_formula == molecular_formula]
+
+        if not results:
+            # 如果没有结果，再使用别名进行查询
+            for alias in aliases:
+                results = pcp.get_compounds(alias, namespace='name')
+                results = [compound for compound in results if compound.molecular_formula == molecular_formula]
+                if results:
+                    break
+
+        if results:
+            cid = results[0].cid
+            canonical_smiles = results[0].canonical_smiles
+            return cid, canonical_smiles
+        else:
+            return None, None
+    except pcp.BadRequestError:
+        print(f"BadRequestError: 检索 {compound_name} 和 {molecular_formula} 时出现错误")
+        return None, None
+    except Exception as e:
+        print(f"检索 {compound_name} 和 {molecular_formula} 时出现错误: {e}")
+        return None, None
+
+
+def process_compound(index, row):
+    compound_name = row['component_name_en']
+    aliases = row['alias'].split('|') if isinstance(row['alias'], str) else []
+    molecular_formula = row['molecular_formula']
+
+    cid, smiles = get_cid_and_smiles(compound_name, aliases, molecular_formula)
+
+    return index, cid, smiles
+
+# 之后的代码保持不变
+def get_file_encoding(file_path):
+    with open(file_path, 'rb') as f:
+        result = chardet.detect(f.read())
+    return result['encoding']
+
+
+file_name = r"01.Drug_Ingredients\02.ingredients_preprocesseddata\03.ETCM.csv"
+
+file_encoding = get_file_encoding(file_name)
+df = pd.read_csv(file_name, encoding=file_encoding)
+
+df['Pubchem_CID'] = ''
+df['SMILES'] = ''
+
+# 设置线程数，根据您的系统性能进行调整
+num_threads = 20
+
+with ThreadPoolExecutor(max_workers=num_threads) as executor:
+    results = list(executor.map(process_compound, df.index, (row for _, row in df.iterrows())))
+
+for result in results:
+    index, cid, smiles = result
+    df.at[index, 'Pubchem_CID'] = cid
+    df.at[index, 'SMILES'] = smiles
+    print(f"Index {index}: Pubchem_CID: {cid}, SMILES: {smiles}")
+
+output_file_name = r"01.Drug_Ingredients\03.ingredients_augmenteddata\ETCM_augmented.csv"
+df.to_csv(output_file_name, index=False, encoding=file_encoding)
+print(f"数据已保存到文件：{output_file_name}")
+
+
+# --- Cell 14 ---
+# 定义源文件路径
+source_path = "01.Drug_Ingredients/02.ingredients_preprocesseddata/01.HIT.csv"
+
+# 定义目标文件路径
+target_path = "01.Drug_Ingredients/03.ingredients_augmenteddata/HIT.csv"
+
+# 复制文件
+shutil.copy2(source_path, target_path)
+
+# 重命名文件
+os.rename(target_path, os.path.join(os.path.dirname(target_path), "HIT.csv"))
+
+
+# --- Cell 17 ---
+# 读取原始数据
+df = pd.read_csv("01.Drug_Ingredients/03.ingredients_augmenteddata/HERB_augmented.csv")
+
+# 删除PubChem_id列的值为空的行
+df = df.dropna(subset=['PubChem_id'])
+
+# 将处理后的数据输出到新的csv文件中
+
+os.makedirs("01.Drug_Ingredients/04.ingredients_filtereddata", exist_ok=True)
+
+df.to_csv("01.Drug_Ingredients/04.ingredients_filtereddata/HERB_filtered.csv", index=False)
+
+
+# --- Cell 19 ---
+# 源文件路径
+hit_file = "01.Drug_Ingredients/03.ingredients_augmenteddata/HIT.csv"
+etcm_file = "01.Drug_Ingredients/03.ingredients_preprocesseddata/ETCM_augmented.csv"
+
+# 目标文件夹路径
+target_folder = "01.Drug_Ingredients/04.ingredients_filtereddata"
+
+# 将HIT.csv复制到目标文件夹
+shutil.copy2(hit_file, target_folder)
+
+# 将ETCM.csv复制到目标文件夹
+shutil.copy2(etcm_file, target_folder)
+
+
+# --- Cell 22 ---
+
+
+# --- Cell 25 ---
+input_folder = r""
+output_file = r""
+
+def merge_xlsx_files(input_folder, output_file):
+    xlsx_files = [file for file in glob.glob(os.path.join(input_folder, "*.xlsx")) if not file.startswith('~$')]
+    print(f"Found {len(xlsx_files)} xlsx files in the input folder.")
+
+    merged_data = pd.DataFrame()
+
+    for xlsx_file in xlsx_files:
+        data = pd.read_excel(xlsx_file)
+        source = os.path.basename(xlsx_file).split('_')[0]
+        data.insert(0, "Source", source)
+        merged_data = pd.concat([merged_data, data], ignore_index=True)
+
+    merged_data.to_excel(output_file, index=False)
+    print(f"Merged data saved to {output_file}")
+
+merge_xlsx_files(input_folder, output_file)
+
+
+# --- Cell 27 ---
+input_file = r""
+output_file = r""
+
+def remove_duplicates(input_file, output_file):
+    data = pd.read_excel(input_file)
+
+    # 删除Pubchem_ID列的值重复的行，仅保留第一个
+    data = data.drop_duplicates(subset=["Pubchem_CID"], keep="first")
+
+    # 删除同时具有相同 "Ingredient name" 和 "molecular_formula" 值的行，仅保留第一个
+    data = data.drop_duplicates(subset=["Ingredient name", "molecular_formula"], keep="first")
+
+    # 保存结果到输出文件
+    data.to_excel(output_file, index=False)
+
+remove_duplicates(input_file, output_file)
+
+
+# --- Cell 29 ---
+
+input_file = ""
+output_file = ""
+
+def remove_duplicates(input_file, output_file):
+    data = pd.read_excel(input_file)
+    # 按照source列的值分类
+    grouped = data.groupby("source")
+    # 在每个source小类别里，删除Pubchem_ID列的值重复的行，仅保留第一个
+    for name, group in grouped:
+        group = group.drop_duplicates(subset=["Pubchem_ID"], keep="first")
+        # 删除同时具有相同 "Ingredient name" 和 "molecular_formula" 值的行，仅保留第一个
+        group = group.drop_duplicates(subset=["Ingredient name", "molecular_formula"], keep="first")
+        # 将处理后的数据添加到结果中
+        if name == grouped.groups.keys()[0]:
+            result = group
+        else:
+            result = pd.concat([result, group])
+    # 保存结果到输出文件
+    result.to_excel(output_file, index=False)
+
+remove_duplicates(input_file, output_file)
+
+
+# --- Cell 37 ---
+os.system('python 01_drug_ingredients/targets.py --input "C:\Users\cdzyy\OneDrive - stu.cdutcm.edu.cn\Paper writing\Network pharmacology\Haoqin-qingdan\01_drug_ingredients\05.merge\SMILES_qed0.67.csv" --output "C:\Users\cdzyy\OneDrive - stu.cdutcm.edu.cn\Paper writing\Network pharmacology\Haoqin-qingdan\01_drug_ingredients\05.merge\TARGETS_qed0.67.csv"')
+
+
+# --- Cell 39 ---
 input_folder = '02_ingredients_targets/021_ingredients_targets_orig'
 output_folder = '02_ingredients_targets/022_ingredients_targets_processed'
 
-# Create output folder (if not exists)
+# 创建输出文件夹（如果不存在）
 os.makedirs(output_folder, exist_ok=True)
 
-# Get all CSV files in folder
-
-# Ensure input folder exists to avoid FileNotFoundError
-if not os.path.exists(input_folder):
-    print(f"Warning: Input folder {input_folder} does not exist. Previous step might have failed.")
-    os.makedirs(input_folder, exist_ok=True)
-
+# 获取文件夹中的所有 CSV 文件
 csv_files = [f for f in os.listdir(input_folder) if f.endswith('.csv')]
 
 for csv_file in csv_files:
     file_path = os.path.join(input_folder, csv_file)
 
-    # Use chardet to automatically detect encoding format
+    # 使用 chardet 自动检测编码格式
     with open(file_path, 'rb') as f:
         result = chardet.detect(f.read())
 
-    # Read CSV file
+    # 读取 CSV 文件
     df = pd.read_csv(file_path, index_col=None, header=0, encoding=result['encoding'])
 
-    # Process UniProt_name column
+    # 处理 UniProt_name 列
     df = df.assign(UniProt_name=df['UniProt_name'].str.split('|')).explode('UniProt_name')
 
-    # Only keep rows where UniProt_name column contains *_HUMAN
+    # 仅保留 UniProt_name 列中包含 *_HUMAN 的行
     df = df[df['UniProt_name'].str.contains('_HUMAN')]
 
-    # Save processed CSV file and rename
+    # 保存处理后的 CSV 文件，并重命名
     output_file_name = csv_file.replace('.csv', '_processed.csv')
     output_file_path = os.path.join(output_folder, output_file_name)
 
     df.to_csv(output_file_path, index=False)
 
 
-# --- Cell 11 ---
+# --- Cell 41 ---
 input_folder = '02_ingredients_targets/022_ingredients_targets_processed'
 output_folder = '02_ingredients_targets/023_ingredients_targets_uniquedata'
 
@@ -189,40 +374,37 @@ for csv_file in csv_files:
     df.to_csv(output_file_path, index=False)
 
 
-# --- Cell 13 ---
-## uniprot rest api species human, status reviewed protein sequences
+# --- Cell 43 ---
+## unipor rest api 物种为人，状态为reviewed的蛋白质序列
 url = 'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%2A%29%20AND%20%28reviewed%3Atrue%29%20AND%20%28model_organism%3A9606%29'
 all_fastas = requests.get(url).text
 
 
-# --- Cell 14 ---
+# --- Cell 44 ---
 input_folder = '02_ingredients_targets/023_ingredients_targets_uniquedata'
 output_folder = '04.Final'
 os.makedirs(output_folder, exist_ok=True)
 
-# Read csv file
+# 更改导出文件名
+base_name = os.path.basename(csv_file)
+output_csv = os.path.join(output_folder, base_name.replace('_uniquedata.csv', '_adjusted.csv'))
+
+# 通过gene name匹配fasta文件的entry name
+# 读取 csv 文件
 csv_files = glob.glob(os.path.join(input_folder, '*_uniquedata.csv'))
-if csv_files:
-    current_file = csv_files[0]
-    df = pd.read_csv(current_file)
-    # Change export filename
-    base_name = os.path.basename(current_file)
-    output_csv = os.path.join(output_folder, base_name.replace('_uniquedata.csv', '_adjusted.csv'))
-else:
-    print('No input files found for Step 2.4'); df = pd.DataFrame({'UniProt_name':[]})
-    output_csv = os.path.join(output_folder, 'mock_adjusted.csv')
+df = pd.read_csv(csv_file)
 fasta_list = re.split(r'\n(?=>)', all_fastas)
-# Get list of values in UniProt_name column of csv table file
+# 获取 csv 表格文件中 UniProt_name 列的值列表
 symbol_values = df['UniProt_name'].tolist()
-# Build regex pattern
+# 构建正则表达式模式
 pattern = '|'.join([f'\\b{symbol}\\b' for symbol in symbol_values])
-# Match fasta list using regex pattern
+# 使用正则表达式模式匹配 fasta 列表
 matched_fastas = [fasta for fasta in fasta_list if re.search(pattern, fasta)]
-# Create DataFrame containing fasta data
+# 创建包含 fasta 数据的 DataFrame
 fasta_df = pd.DataFrame({'fasta': matched_fastas})
 
-# Except for the header line, only keep content after the second "|" and before the first space in each line
-# Process each line of data, extract required content
+# 除标题行外，每行仅保留第二个“|”后和第一个空格前的内容
+# 处理每行数据，提取所需内容
 processed_data = []
 original_values = []
 for index, row in fasta_df.iterrows():
@@ -237,215 +419,132 @@ for index, row in fasta_df.iterrows():
     processed_data.append(processed_value)
     original_values.append(original_value)
 
-# Create new DataFrame and store processed data into it
+# 创建新的 DataFrame，并将处理后的数据存入其中
 processed_df = pd.DataFrame({
     'Original Value': original_values,
     'Processed Value': processed_data
 })
 
-# Export as CSV file
+# 导出为 CSV 文件
 processed_df.to_csv(output_csv, index=False)
 print(f"Result exported to {output_csv}")
 
 
-# --- Cell 16 ---
-# Function to search OpenTargets by Disease Name
-def fetch_opentargets_data(disease_name, output_file):
-    print(f'Searching OpenTargets for: {disease_name}')
-    url = 'https://api.platform.opentargets.org/api/v4/graphql'
-
-    # 1. Search for disease ID
-    query_search = """
-    query Search($queryString: String!) {
-      search(queryString: $queryString, entityNames: ["disease"], page: {index: 0, size: 1}) {
-        hits {
-          id
-          name
-        }
-      }
-    }
-    """
-
-    try:
-        response = requests.post(url, json={"query": query_search, "variables": {"queryString": disease_name}})
-        response.raise_for_status()
-        data = response.json()
-        hits = data.get('data', {}).get('search', {}).get('hits', [])
-
-        if not hits:
-            print(f"No disease found for '{disease_name}'")
-            return
-
-        disease_id = hits[0]['id']
-        print(f"Found disease: {hits[0]['name']} ({disease_id})")
-
-        # 2. Get targets
-        query_targets = """
-        query diseaseTargets($efoId: String!) {
-          disease(efoId: $efoId) {
-            associatedTargets(page: {index: 0, size: 200}) { # Limit to 200 for demo
-              rows {
-                target {
-                  approvedSymbol
-                }
-                score
-              }
-            }
-          }
-        }
-        """
-
-        response = requests.post(url, json={"query": query_targets, "variables": {"efoId": disease_id}})
-        response.raise_for_status()
-        data = response.json()
-
-        targets = data.get('data', {}).get('disease', {}).get('associatedTargets', {}).get('rows', [])
-
-        # Format for pipeline: 'symbol', 'overallAssociationScore'
-        formatted_data = []
-        for row in targets:
-            formatted_data.append({
-                'symbol': row['target']['approvedSymbol'],
-                'overallAssociationScore': row['score']
-            })
-
-        df = pd.DataFrame(formatted_data)
-        os.makedirs(os.path.dirname(output_file), exist_ok=True)
-        df.to_csv(output_file, index=False)
-        print(f"Saved {len(df)} targets to {output_file}")
-
-    except Exception as e:
-        print(f"OpenTargets query failed: {e}")
-
-# Run Search
-ot_output = '03_diseases_targets/031_orig/Opentargets_fetched.csv'
-fetch_opentargets_data(DISEASE_NAME, ot_output)
-
-# GeneCards Placeholder/Instruction
-print(f"For GeneCards, please visit https://www.genecards.org/Search/Keyword?queryString={DISEASE_NAME}")
-print("Download the results and save as '03_diseases_targets/031_orig/GeneCards_fetched.csv' if automatic search is not possible.")
-
-
-# --- Cell 19 ---
-# Set export folder path and export filename
-output_folder = "03_diseases_targets/031_orig"  # Path can be changed as needed
-output_filename = "disgenet_results.xml"  # Filename can be changed as needed
+# --- Cell 48 ---
+# 设置导出文件夹路径和导出文件名
+output_folder = "03_diseases_targets/031_orig"  # 路径可根据需要更改
+output_filename = "disgenet_results.xml"  # 文件名可根据需要更改
 os.makedirs(output_folder, exist_ok=True)
 output_file = os.path.join(output_folder, output_filename)
 
-# Input disease information
+# 输入疾病信息
 vocabulary = "mesh" # ICD9CM, ICD10, MeSH, OMIM, DO, EFO, NCI, HPO, MONDO, or ORDO identifier
-disease_id = "D001943" # Disease id or list of disease ids separated by "," up to 100.
-# Updated Disease ID to D001943 (Breast Cancer) as requested.
+disease_id = "D001172" # Disease id or list of disease ids separated by "," up to 100.
 
-# Set API key
-token = "1e0082cbe4be2f5cc81b1b9c8876d8a577cfd697" # Please replace with your authorized DisGeNET_REST_API key
+# 设置API密钥
+token = "1e0082cbe4be2f5cc81b1b9c8876d8a577cfd697" # 请替换为你已获得授权的DisGeNET_REST_API密钥
 headers = {"Authorization": f"Bearer {token}"}
 
-# Send request, get GDA data
-url = f"https://www.disgenet.org/api/gda/disease/{vocabulary}/{disease_id}?format=xml"  # Three formats available: TSV, JSON, XML
+# 发送请求，获取GDA数据
+url = f"https://www.disgenet.org/api/gda/disease/{vocabulary}/{disease_id}?format=xml"  # 共有三种格式：TSV, JSON, XML
 response = requests.get(url, headers=headers)
 
-# Create folder if it doesn't exist
+# 如果文件夹不存在则创建
 os.makedirs(output_folder, exist_ok=True)
 
-# Output result to file
+# 输出结果到文件
 with open(output_file, "w", encoding="utf-8") as f:
     f.write(response.text)
 
-print(f"Result saved to file: {output_file}")
+print(f"结果已保存至文件：{output_file}")
 
 
-# --- Cell 22 ---
-# Check if directory exists, if not, create it
+# --- Cell 51 ---
+# 检查目录是否存在，如果不存在，则创建它
 output_dir = '03_diseases_targets/032_trans'
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-try:
-    # Parse XML file
-    tree = ET.parse('03_diseases_targets/031_orig/disgenet_results.xml')
-    root = tree.getroot()
+# 解析XML文件
+tree = ET.parse('03_diseases_targets/031_orig/disgenet_results.xml')
+root = tree.getroot()
 
-    # Open CSV file and write header row
-    with open(os.path.join(output_dir, 'disgenet_results.csv'), 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(['geneid', 'gene_symbol', 'uniprotid', 'gene_dsi', 'gene_dpi', 'gene_pli', 'protein_class', 'protein_class_name', 'diseaseid', 'disease_name', 'disease_class', 'disease_class_name', 'disease_type', 'disease_semantic_type', 'score', 'ei', 'el', 'year_initial', 'year_final', 'source'])
+# 打开CSV文件并写入标题行
+with open(os.path.join(output_dir, 'disgenet_results.csv'), 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(['geneid', 'gene_symbol', 'uniprotid', 'gene_dsi', 'gene_dpi', 'gene_pli', 'protein_class', 'protein_class_name', 'diseaseid', 'disease_name', 'disease_class', 'disease_class_name', 'disease_type', 'disease_semantic_type', 'score', 'ei', 'el', 'year_initial', 'year_final', 'source'])
 
-        # Iterate through XML file and write values to CSV file
-        for item in root.findall('.//list-item'):
-            geneid = item.find('geneid').text
-            gene_symbol = item.find('gene_symbol').text
-            uniprotid = item.find('uniprotid').text
-            gene_dsi = item.find('gene_dsi').text
-            gene_dpi = item.find('gene_dpi').text
-            gene_pli = item.find('gene_pli').text
-            protein_class = item.find('protein_class').text
-            protein_class_name = item.find('protein_class_name').text
-            diseaseid = item.find('diseaseid').text
-            disease_name = item.find('disease_name').text
-            disease_class = item.find('disease_class').text
-            disease_class_name = item.find('disease_class_name').text
-            disease_type = item.find('disease_type').text
-            disease_semantic_type = item.find('disease_semantic_type').text
-            score = item.find('score').text
-            ei = item.find('ei').text
-            el = item.find('el').text
-            year_initial = item.find('year_initial').text
-            year_final = item.find('year_final').text
-            source = item.find('source').text
+    # 遍历XML文件并将值写入CSV文件
+    for item in root.findall('.//list-item'):
+        geneid = item.find('geneid').text
+        gene_symbol = item.find('gene_symbol').text
+        uniprotid = item.find('uniprotid').text
+        gene_dsi = item.find('gene_dsi').text
+        gene_dpi = item.find('gene_dpi').text
+        gene_pli = item.find('gene_pli').text
+        protein_class = item.find('protein_class').text
+        protein_class_name = item.find('protein_class_name').text
+        diseaseid = item.find('diseaseid').text
+        disease_name = item.find('disease_name').text
+        disease_class = item.find('disease_class').text
+        disease_class_name = item.find('disease_class_name').text
+        disease_type = item.find('disease_type').text
+        disease_semantic_type = item.find('disease_semantic_type').text
+        score = item.find('score').text
+        ei = item.find('ei').text
+        el = item.find('el').text
+        year_initial = item.find('year_initial').text
+        year_final = item.find('year_final').text
+        source = item.find('source').text
 
-            # Write values to CSV file
-            writer.writerow([geneid, gene_symbol, uniprotid, gene_dsi, gene_dpi, gene_pli, protein_class, protein_class_name, diseaseid, disease_name, disease_class, disease_class_name, disease_type, disease_semantic_type, score, ei, el, year_initial, year_final, source])
-except Exception as e:
-    print(f'Warning: Failed to process DisGeNET XML: {e}')
-    print('Proceeding with other available disease target files (GeneCards, OpenTargets)...')
+        # 将值写入CSV文件
+        writer.writerow([geneid, gene_symbol, uniprotid, gene_dsi, gene_dpi, gene_pli, protein_class, protein_class_name, diseaseid, disease_name, disease_class, disease_class_name, disease_type, disease_semantic_type, score, ei, el, year_initial, year_final, source])
 
 
-# --- Cell 24 ---
-# Input folder path
+# --- Cell 53 ---
+# 输入文件夹路径
 input_folder = "03_diseases_targets/031_orig"
 output_folder = "03_diseases_targets/032_trans"
 
-# Create output folder
+# 创建输出文件夹
 os.makedirs(output_folder, exist_ok=True)
 
-# Iterate through all files
+# 遍历所有文件
 for file in os.listdir(input_folder):
     if file.endswith('.tsv') or file.endswith('.txt'):
-        # Read tsv file content
+        # 读取tsv文件内容
         with open(os.path.join(input_folder, file), 'r', encoding='utf-8') as f:
             tsv_reader = csv.reader(f, delimiter='\t')
             rows = [row for row in tsv_reader]
 
-        # Write tsv file content to csv file
+        # 将tsv文件内容写入csv文件
         with open(os.path.join(output_folder, file.replace('.tsv', '.csv').replace('.txt', '.csv')), 'w', newline='', encoding='utf-8') as f:
             csv_writer = csv.writer(f)
             csv_writer.writerows(rows)
     elif file.endswith('.csv'):
-        # Directly copy csv file to output folder
+        # 直接复制csv文件到输出文件夹
         shutil.copyfile(os.path.join(input_folder, file), os.path.join(output_folder, file))
     elif file.endswith('.xlsx'):
-        # Read xlsx file
+        # 读取xlsx文件
         df = pd.read_excel(os.path.join(input_folder, file))
 
-        # Write xlsx file content to csv file
+        # 将xlsx文件内容写入csv文件
         csv_file = os.path.join(output_folder, file.replace('.xlsx', '.csv'))
         df.to_csv(csv_file, index=False, encoding='utf-8')
 
 
-# --- Cell 26 ---
+# --- Cell 55 ---
 input_folder = '03_diseases_targets/032_trans'
 output_folder = '03_diseases_targets/033_screened'
 
 os.makedirs(output_folder, exist_ok=True)
 
-## The following are screening criteria
-CTD_inferencescore_threshold = 100 # Screening criteria for files with "CTD" in filename
-disgenet_score_threshold = 0.1 # Screening criteria for files with "disgenet" in filename
-GeneCards_Relevancescore_threshold = 10 # Screening criteria for files with "GeneCards" in filename
-NCBI_org_name = "Homo sapiens" # Screening criteria for files with "NCBI" in filename
-Opentargets_overallAssociationScore_threshold = 0.1 # Screening criteria for files with "Opentargets" in filename
+## 以下为筛选条件
+CTD_inferencescore_threshold = 100 # 文件名含有“CTD”的文件筛选条件
+disgenet_score_threshold = 0.1 # 文件名含有“disgenet”的文件筛选条件
+GeneCards_Relevancescore_threshold = 10 # 文件名含有“GeneCards”的文件筛选条件
+NCBI_org_name = "Homo sapiens" # 文件名含有“NCBI”的文件筛选条件
+Opentargets_overallAssociationScore_threshold = 0.1 # 文件名含有“Opentargets”的文件筛选条件
 
 for file in os.listdir(input_folder):
     if file.endswith('.csv') and 'CTD' in file:
@@ -531,40 +630,40 @@ for file in os.listdir(input_folder):
         shutil.copyfile(os.path.join(input_folder, file), output_file)
 
 
-# --- Cell 28 ---
-# Define input and output folder paths
+# --- Cell 57 ---
+# 定义输入输出文件夹路径
 input_folder = '03_diseases_targets/033_screened'
 output_folder = '03_diseases_targets/033_uniquedata'
 
-# Create output folder
+# 创建输出文件夹
 os.makedirs(output_folder, exist_ok=True)
 
-# Create an empty list to store all values containing "symbol" column
+# 创建一个空列表，用于存储所有含有“symbol”列的值
 all_symbol_values = []
 
-# Iterate through all CSV files
+# 遍历所有CSV文件
 for file in os.listdir(input_folder):
     if file.endswith('.csv'):
-        # Read CSV file content
+        # 读取CSV文件内容
         with open(os.path.join(input_folder, file), 'r', encoding='utf-8') as f:
             csv_reader = csv.reader(f)
             header = next(csv_reader)
             symbol_columns = [i for i, col in enumerate(header) if 'symbol' in col.lower()]
-            # If "symbol" column exists in CSV file
+            # 如果CSV文件中存在含有“symbol”列
             if symbol_columns:
-                # Iterate through all rows
+                # 遍历所有行
                 for row in csv_reader:
-                    # Add values of "symbol" column to all_symbol_values list
+                    # 将含有“symbol”列的值添加到all_symbol_values列表中
                     for col_index in symbol_columns:
                         all_symbol_values.append(row[col_index])
 
-# Remove duplicates from all_symbol_values list, keep only unique values
+# 将all_symbol_values列表去重，仅保留唯一值
 unique_symbol_values = list(set(all_symbol_values))
 
-# Merge all unique values into a long string
+# 将所有唯一值合并为一个长字符串
 merged_values = ', '.join(unique_symbol_values)
 
-# Write merged values to output file
+# 将合并后的值写入到输出文件中
 output_file = os.path.join(output_folder, 'disease_targets_uniquedata.csv')
 with open(output_file, 'w', newline='', encoding='utf-8') as f:
     csv_writer = csv.writer(f)
@@ -573,46 +672,43 @@ with open(output_file, 'w', newline='', encoding='utf-8') as f:
         csv_writer.writerow([symbol.strip()])
 
 
-# --- Cell 31 ---
-## uniprot rest api species human, status reviewed protein sequences
+# --- Cell 60 ---
+## unipor rest api 物种为人，状态为reviewed的蛋白质序列
 url = 'https://rest.uniprot.org/uniprotkb/stream?format=fasta&query=%28%2A%29%20AND%20%28reviewed%3Atrue%29%20AND%20%28model_organism%3A9606%29'
 all_fastas = requests.get(url).text
 
 
-# --- Cell 33 ---
+# --- Cell 62 ---
 import re
 fasta_list = re.split(r'\n(?=>)', all_fastas)
 [fasta for fasta in fasta_list if 'DUS3_HUMAN' in fasta]
 
 
-# --- Cell 35 ---
+# --- Cell 64 ---
 input_folder = '02_ingredients_targets/023_ingredients_targets_uniquedata'
 output_folder = '04_intersection_targets'
 os.makedirs(output_folder, exist_ok=True)
 
-# Read csv file
+# 更改导出文件名
+base_name = os.path.basename(csv_file)
+output_csv = os.path.join(output_folder, base_name.replace('_uniquedata.csv', '_adjusted.csv'))
+
+# 通过gene name匹配fasta文件的entry name
+# 读取 csv 文件
 csv_files = glob.glob(os.path.join(input_folder, '*_uniquedata.csv'))
-if csv_files:
-    current_file = csv_files[0]
-    df = pd.read_csv(current_file)
-    # Change export filename
-    base_name = os.path.basename(current_file)
-    output_csv = os.path.join(output_folder, base_name.replace('_uniquedata.csv', '_adjusted.csv'))
-else:
-    print('No input files found for Step 2.4'); df = pd.DataFrame({'UniProt_name':[]})
-    output_csv = os.path.join(output_folder, 'mock_adjusted.csv')
+df = pd.read_csv(csv_file)
 fasta_list = re.split(r'\n(?=>)', all_fastas)
-# Get list of values in UniProt_name column of csv table file
+# 获取 csv 表格文件中 UniProt_name 列的值列表
 symbol_values = df['UniProt_name'].tolist()
-# Build regex pattern
+# 构建正则表达式模式
 pattern = '|'.join([f'\\b{symbol}\\b' for symbol in symbol_values])
-# Match fasta list using regex pattern
+# 使用正则表达式模式匹配 fasta 列表
 matched_fastas = [fasta for fasta in fasta_list if re.search(pattern, fasta)]
-# Create DataFrame containing fasta data
+# 创建包含 fasta 数据的 DataFrame
 fasta_df = pd.DataFrame({'fasta': matched_fastas})
 
-# Except for the header line, only keep content after the second "|" and before the first space in each line
-# Process each line of data, extract required content
+# 除标题行外，每行仅保留第二个“|”后和第一个空格前的内容
+# 处理每行数据，提取所需内容
 processed_data = []
 original_values = []
 for index, row in fasta_df.iterrows():
@@ -627,45 +723,45 @@ for index, row in fasta_df.iterrows():
     processed_data.append(processed_value)
     original_values.append(original_value)
 
-# Create new DataFrame and store processed data into it
+# 创建新的 DataFrame，并将处理后的数据存入其中
 processed_df = pd.DataFrame({
     'Original Value': original_values,
     'Processed Value': processed_data
 })
 
-# Export as CSV file
+# 导出为 CSV 文件
 processed_df.to_csv(output_csv, index=False)
 print(f"Result exported to {output_csv}")
 
 
-# --- Cell 37 ---
+# --- Cell 66 ---
 csv_file = '03_diseases_targets/033_uniquedata/disease_targets_uniquedata.csv'
 output_csv = '04_intersection_targets/disease_targets_adjusted.csv'
 
-# Match entry name of fasta file by gene name
-# Read csv file
+# 通过gene name匹配fasta文件的entry name
+# 读取 csv 文件
 df = pd.read_csv(csv_file)
 fasta_list = re.split(r'\n(?=>)', all_fastas)
-# Get list of values in symbol column of csv table file
+# 获取 csv 表格文件中 symbol 列的值列表
 symbol_values = df['Symbol'].tolist()
-# Build regex pattern
+# 构建正则表达式模式
 pattern = '|'.join([f'GN={symbol} ' for symbol in symbol_values])
 
-# Match fasta list using regex pattern
+# 使用正则表达式模式匹配 fasta 列表
 matched_fastas = []
 matched_symbols = []
 for fasta in fasta_list:
     match = re.search(pattern, fasta)
     if match:
-        symbol = match.group().split('=')[1]  # Get matched gene symbol
+        symbol = match.group().split('=')[1]  # 获取匹配到的gene symbol
         matched_fastas.append(fasta)
         matched_symbols.append(symbol)
 
-# Create DataFrame containing fasta data
+# 创建包含 fasta 数据的 DataFrame
 fasta_df = pd.DataFrame({'fasta': matched_fastas, 'Symbol': matched_symbols})
 
-# Except for the header line, only keep content after the second "|" and before the first space in each line
-# Process each line of data, extract required content
+# 除标题行外，每行仅保留第二个“|”后和第一个空格前的内容
+# 处理每行数据，提取所需内容
 processed_data = []
 for index, row in fasta_df.iterrows():
     value = row['fasta']
@@ -676,18 +772,18 @@ for index, row in fasta_df.iterrows():
         processed_value = ''
     processed_data.append(processed_value)
 
-# Create new DataFrame and store processed data and matched gene symbol into it
+# 创建新的 DataFrame，并将处理后的数据和匹配到的gene symbol存入其中
 processed_df = pd.DataFrame({
     'Original Gene Symbol': fasta_df['Symbol'],
     'Processed Value': processed_data
 })
 
-# Export as CSV file
+# 导出为 CSV 文件
 processed_df.to_csv(output_csv, index=False)
 print(f"Result exported to {output_csv}")
 
 
-# --- Cell 39 ---
+# --- Cell 68 ---
 def detect_encoding(file_path):
     with open(file_path, 'rb') as f:
         result = chardet.detect(f.read())
@@ -709,7 +805,7 @@ intersection = set.intersection(*uni_sets)
 result_df = pd.DataFrame(list(intersection), columns=['Processed Value'])
 result_df.to_csv(os.path.join(output_path, 'intersection_targets.csv'), index=False)
 
-# Plot Venn diagram (only applicable for 2 CSV files)
+# 绘制 Venn 图（仅适用于 2 个 CSV 文件的情况）
 if len(uni_sets) == 2:
     venn = venn2([uni_sets[0], uni_sets[1]], set_labels=['File 1', 'File 2'])
     plt.savefig(os.path.join(output_path, 'venn_diagram.svg'), format='svg')
@@ -718,15 +814,15 @@ else:
     print("Venn diagram can only be plotted for 2 CSV files.")
 
 
-# --- Cell 43 ---
-output_folder = "05_ppi" # Define output folder path
+# --- Cell 72 ---
+output_folder = "05_ppi" # 定义输出文件夹路径
 os.makedirs(output_folder, exist_ok=True)
 
 string_api_url = "https://version-11-5.string-db.org/api"
 output_format = "svg"
 method = "network"
 
-df = pd.read_csv("04_intersection_targets/intersection_targets.csv") # Read CSV file
+df = pd.read_csv("04_intersection_targets/intersection_targets.csv") # 读取 CSV 文件
 my_genes = df["Processed Value"].tolist()
 
 identifiers = "%0d".join(my_genes)
@@ -736,7 +832,7 @@ request_url = "/".join([string_api_url, output_format, method])
 params = {
     "identifiers": identifiers,
     "species": 9606,
-    "required_score": 900,  # "Minimum required interaction score" in STRING webpage, optional 400, 700, 900
+    "required_score": 900,  #对应STRING网页中的"Minimum required interaction score"，可选400，700，900
     "hide_disconnected_nodes": 1,
     "caller_identity": "www.my_app.org"
 }
@@ -753,15 +849,15 @@ with open(output_path, 'wb') as fh:
 sleep(1)
 
 
-# --- Cell 45 ---
-output_folder = "05_ppi" # Please modify output folder path according to actual situation
+# --- Cell 74 ---
+output_folder = "05_ppi" # 请根据实际情况修改输出文件夹路径
 os.makedirs(output_folder, exist_ok=True)
 
 string_api_url = "https://string-db.org/api"
 output_format = "tsv"
 method = "network"
 
-csv_file_path = "04_intersection_targets/intersection_targets.csv"  # Please modify CSV file path according to actual situation
+csv_file_path = "04_intersection_targets/intersection_targets.csv"  # 请根据实际情况修改 CSV 文件路径
 df = pd.read_csv(csv_file_path)
 my_genes = df["Processed Value"].tolist()
 
@@ -770,14 +866,14 @@ request_url = "/".join([string_api_url, output_format, method])
 params = {
     "identifiers": "%0d".join(my_genes),
     "species": 9606,
-    "required_score": 900, # "Minimum required interaction score" in STRING webpage, optional 400, 700, 900
+    "required_score": 900, #对应STRING网页中的"Minimum required interaction score"，可选400，700，900
     "caller_identity": "www.my_example_app.org",
 }
 
 response = requests.post(request_url, data=params)
 
 
-# Save as TSV file
+# 保存为 TSV 文件
 output_file_path = os.path.join(output_folder, "protein_interactions.tsv")
 with open(output_file_path, "w") as f:
     f.write(response.text)
@@ -785,153 +881,192 @@ with open(output_file_path, "w") as f:
 print(f"Protein interactions saved to {output_file_path}")
 
 
-# --- Cell 47 ---
+# --- Cell 76 ---
+ppi_data = pd.read_csv("05_ppi/protein_interactions.tsv", sep="\t")
 output_folder = "05_ppi"
 os.makedirs(output_folder, exist_ok=True)
-# Create an empty undirected weighted network
+# 创建一个空的无向加权网络
 G = nx.Graph()
 
-# 1. Add PPI edges (Target-Target)
-ppi_file = "05_ppi/protein_interactions.tsv"
-if os.path.exists(ppi_file):
-    try:
-        ppi_data = pd.read_csv(ppi_file, sep="\t")
-        if "preferredName_A" in ppi_data.columns and "preferredName_B" in ppi_data.columns:
-            for index, row in ppi_data.iterrows():
-                G.add_edge(row["preferredName_A"], row["preferredName_B"], weight=row.get("score", 0.0), type='ppi')
-        else:
-            print("PPI file missing required columns. Skipping PPI edges.")
-    except Exception as e:
-        print(f"Error reading PPI file: {e}")
-else:
-    print("PPI file not found. Skipping PPI edges.")
+# 添加节点和边
+for index, row in ppi_data.iterrows():
+    G.add_edge(row["preferredName_A"], row["preferredName_B"], weight=row["score"])
 
-# 2. Add Ingredient-Target edges
-# Load targets mapping
-try:
-    ing_target_file = "02_ingredients_targets/021_ingredients_targets_orig/targets.csv"
-    if os.path.exists(ing_target_file):
-        it_df = pd.read_csv(ing_target_file)
+# 计算网络指标
+degree_centrality = nx.degree_centrality(G)
+closeness_centrality = nx.closeness_centrality(G)
+betweenness_centrality = nx.betweenness_centrality(G)
+eigenvector_centrality = nx.eigenvector_centrality(G)
 
-        # We need to intersect with valid targets from Step 4
-        intersection_file = "04_intersection_targets/intersection_targets.csv"
-        valid_targets = set()
-        if os.path.exists(intersection_file):
-             idf = pd.read_csv(intersection_file)
-             if 'Processed Value' in idf.columns:
-                 valid_targets = set(idf['Processed Value'])
+# 将所有中心性指标组合成一个DataFrame
+centrality_measures = {
+    'degree': degree_centrality,
+    'closeness': closeness_centrality,
+    'betweenness': betweenness_centrality,
+    'eigenvector': eigenvector_centrality
+}
 
-        for idx, row in it_df.iterrows():
-            ing = row['Ingredient name']
-            targs = str(row['UniProt_name']).split('|')
-            for t in targs:
-                # Add edge if target is in intersection (or if we want full network)
-                # Generally we only care about intersection targets
-                if t in valid_targets:
-                     G.add_edge(ing, t, weight=1.0, type='ing-target')
-                elif not valid_targets: # If intersection empty/missing, add all (fallback)
-                     G.add_edge(ing, t, weight=1.0, type='ing-target')
+df = pd.DataFrame(centrality_measures)
 
-    # 3. Add Plant-Ingredient edges
-    ing_smiles_file = "01_drug_ingredients/05.merge/no_duplicates/Ingredient_smiles.csv"
-    if os.path.exists(ing_smiles_file):
-        is_df = pd.read_csv(ing_smiles_file)
-        if 'Plant' in is_df.columns:
-            for idx, row in is_df.iterrows():
-                plant = row['Plant']
-                ing = row['Ingredient name']
-                if pd.notna(plant) and pd.notna(ing):
-                    G.add_edge(plant, ing, weight=1.0, type='plant-ing')
+# 计算总和并按总和排序
+df['sum'] = df.sum(axis=1)
+df = df.sort_values('sum', ascending=False)
 
-except Exception as e:
-    print(f"Error adding hierarchical edges: {e}")
-
-# Calculate network metrics (only if graph not empty)
-# NetworkX version compatibility: is_empty() might not exist in older/newer versions, use len(G.nodes()) > 0
-if len(G.nodes()) > 0:
-    degree_centrality = nx.degree_centrality(G)
-    closeness_centrality = nx.closeness_centrality(G)
-    betweenness_centrality = nx.betweenness_centrality(G)
-    # eigenvector might fail on disconnected graph, use max_iter
-    try:
-        eigenvector_centrality = nx.eigenvector_centrality(G, max_iter=1000)
-    except:
-        eigenvector_centrality = {n: 0 for n in G.nodes()}
-
-    # Combine all centrality metrics into a DataFrame
-    centrality_measures = {
-        'degree': degree_centrality,
-        'closeness': closeness_centrality,
-        'betweenness': betweenness_centrality,
-        'eigenvector': eigenvector_centrality
-    }
-
-    df = pd.DataFrame(centrality_measures)
-
-    # Calculate sum and sort by sum
-    df['sum'] = df.sum(axis=1)
-    df = df.sort_values('sum', ascending=False)
-
-    # Save results as CSV file
-    df.to_csv(f"{output_folder}/centrality_measures.csv")
-    print(f"Network analysis complete. Nodes: {G.number_of_nodes()}, Edges: {G.number_of_edges()}")
-
-    # Export for Cytoscape (Nodes and Edges)
-    nx.write_graphml(G, f"{output_folder}/network_for_cytoscape.graphml")
-    print(f"GraphML saved to {output_folder}/network_for_cytoscape.graphml")
-else:
-    print("Graph is empty. No network analysis performed.")
+# 将结果保存为 CSV 文件
+df.to_csv(f"{output_folder}/centrality_measures.csv")
 
 
-# --- Cell 51 ---
-# Read CSV file
+# --- Cell 80 ---
+# 读取CSV文件
 output_folder = "05_ppi"
 csv_file = "05_ppi/centrality_measures.csv"
 df = pd.read_csv(csv_file)
 
-# Keep only Protein column
+# 只保留Protein列
 # df = df[["Protein"]]
 df = df.iloc[:, 0:1]
 
-# Keep only top 20 values
+# 只保留前20个值
 df = df.head(20)
 
 os.makedirs(output_folder, exist_ok=True)
 
-# Export as XLSX file
-output_file = os.path.join(output_folder, "selected_proteins.xlsx")
+# 导出为XLSX文件
+output_file = output_folder + "selected_proteins.xlsx"
 df.to_excel(output_file, index=False)
 
 
-# --- Cell 53: Skipped (Appears to be R code) ---
-# --- Cell 54: Skipped (Appears to be R code) ---
-# --- Cell 56 ---
-# Skipped (R code)
+# --- Cell 82: Skipped (Appears to be R code) ---
+# --- Cell 84 ---
+#载入差异表达数据，只需基因ID(GO,KEGG,GSEA需要)和Log2FoldChange(GSEA需要)即可
+info <- read.xlsx( "05.ppiselected_proteins.xlsx", rowNames = F,colNames = T)
+print(info)
+#指定富集分析的物种库
+GO_database <- 'org.Hs.eg.db' #GO分析指定物种，物种缩写索引表详见http://bioconductor.org/packages/release/BiocViews.html#___OrgDb
+KEGG_database <- 'hsa' #KEGG分析指定物种，物种缩写索引表详见http://www.genome.jp/kegg/catalog/org_list.html
 
-# --- Cell 58 ---
-# Skipped (R code)
-
-# --- Cell 60 ---
-# Skipped (R code)
-
-# --- Cell 62 ---
-# Skipped (R code)
-
-# --- Cell 64 ---
-# Skipped (R code)
-
-# --- Cell 66 ---
-# Skipped (R code)
-
-# --- Cell 68 ---
-# Skipped (R code)
-
-# --- Cell 70 ---
-# Skipped (R code)
-
-# --- Cell 72 ---
-# Skipped (R code)
+#gene ID转换
+gene <- bitr(info$'Unnamed:.0',fromType = 'SYMBOL',toType = 'ENTREZID',OrgDb = GO_database)
+print(gene)
 
 
-# --- Cell 74: Skipped (Appears to be R code) ---
-# --- Cell 75: Skipped (Appears to be R code) ---
+# --- Cell 86 ---
+#设置导出文件夹路径
+output_dir <- "06_enrichment"
+#如果文件夹不存在，则创建
+if (!dir.exists(output_dir)) {
+  dir.create(output_dir)
+}
+#进行GO富集分析
+GO <- enrichGO(gene$ENTREZID,
+               OrgDb = GO_database,
+               keyType = "ENTREZID",
+               ont = "ALL",
+               pvalueCutoff = 0.05,
+               qvalueCutoff = 0.05,
+               readable = TRUE)
+print(GO)
+#将结果保存为CSV文件
+output_file <- file.path(output_dir, "GO_enrichment_results.csv")
+write.csv(GO, file = output_file)
+
+
+# --- Cell 88 ---
+# 设置导出文件夹路径
+output_dir <- "06_enrichment"
+
+
+KEGG<-enrichKEGG(gene$ENTREZID,#KEGG富集分析
+                 organism = KEGG_database,
+                 pvalueCutoff = 0.05,
+                 qvalueCutoff = 0.05)
+print(KEGG)
+# 将结果保存为CSV文件
+output_file <- file.path(output_dir, "KEGG_enrichment_results.csv")
+write.csv(KEGG, file = output_file)
+
+
+# --- Cell 90 ---
+#使用options()函数设置图像宽度和高度（以像素为单位），设置会影响Jupyter Notebook中所有后续的R图形
+options(repr.plot.width = 10, repr.plot.height = 10)  # 设置宽度为10英寸，高度为6英寸
+
+
+# --- Cell 92 ---
+#label_format=150表示标签长度为150，即每行显示150个字符，避免自动换行
+p1 <- barplot(GO, split="ONTOLOGY", label_format=150)+facet_grid(ONTOLOGY~., scale="free")#柱状图
+p2 <- barplot(KEGG,showCategory = 30,title = 'KEGG Pathway', label_format=150)
+p3 <- dotplot(GO, split="ONTOLOGY", label_format=150)+facet_grid(ONTOLOGY~., scale="free")#点状图
+p4 <- dotplot(KEGG, label_format=150)
+p1
+p2
+p3
+p4
+
+
+# --- Cell 94 ---
+p5 <- enrichplot::cnetplot(GO, circular = FALSE, colorEdge = FALSE,
+         shadowtext = "all",
+         color.params = list(foldChange = NULL, edge = FALSE, category = "#e13a38", gene = "#2fa7f3"))
+p6 <- enrichplot::cnetplot(KEGG, circular = FALSE, colorEdge = FALSE,
+         shadowtext = "all",
+         color.params = list(foldChange = NULL, edge = FALSE, category = "#e13a38", gene = "#2fa7f3"))
+p5
+p6
+
+
+# --- Cell 96 ---
+p7 <- enrichplot::heatplot(GO,showCategory = 50, label_format=150)#基因-通路关联热图
+p8 <- enrichplot::heatplot(KEGG,showCategory = 50, label_format=150)
+p7
+p8
+
+
+# --- Cell 98 ---
+GO2 <- pairwise_termsim(GO)
+KEGG2 <- pairwise_termsim(KEGG)
+p9 <- enrichplot::emapplot(GO2,showCategory = 15, color = "p.adjust", layout = "kk", cex_label_category = 1, cex_line = 0.3)#通路间关联网络图
+p10 <- enrichplot::emapplot(KEGG2,showCategory = 15, color = "p.adjust", layout = "kk", cex_label_category = 1, cex_line = 0.3)
+p9
+p10
+
+
+# --- Cell 100 ---
+GO_BP<-enrichGO( gene$ENTREZID,#GO富集分析BP模块
+                 OrgDb = GO_database,
+                 keyType = "ENTREZID",
+                 ont = "BP",
+                 pvalueCutoff = 0.05,
+                 pAdjustMethod = "BH",
+                 qvalueCutoff = 0.05,
+                 minGSSize = 10,
+                 maxGSSize = 500,
+                 readable = T)
+p11 <- plotGOgraph(GO_BP)#GO-BP功能网络图
+GO_CC<-enrichGO( gene$ENTREZID,#GO富集分析CC模块
+                 OrgDb = GO_database,
+                 keyType = "ENTREZID",
+                 ont = "CC",
+                 pvalueCutoff = 0.05,
+                 pAdjustMethod = "BH",
+                 qvalueCutoff = 0.05,
+                 minGSSize = 10,
+                 maxGSSize = 500,
+                 readable = T)
+p12 <- plotGOgraph(GO_CC)#GO-CC功能网络图
+GO_MF<-enrichGO( gene$ENTREZID,#GO富集分析MF模块
+                 OrgDb = GO_database,
+                 keyType = "ENTREZID",
+                 ont = "MF",
+                 pvalueCutoff = 0.05,
+                 pAdjustMethod = "BH",
+                 qvalueCutoff = 0.05,
+                 minGSSize = 10,
+                 maxGSSize = 500,
+                 readable = T)
+p13 <- plotGOgraph(GO_MF)#GO-MF功能网络图
+p11
+p12
+p13
+
+
+# --- Cell 102: Skipped (Appears to be R code) ---
