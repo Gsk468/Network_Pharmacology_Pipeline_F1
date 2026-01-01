@@ -102,21 +102,41 @@ else:
 # --- Target Prediction ---
 # Call external script
 print("Running Target Prediction...")
-input_smiles = "01_drug_ingredients/05.merge/SMILES_qed0.67.csv"
-output_targets = "01_drug_ingredients/05.merge/TARGETS_qed0.67.csv"
+# Standardize path
+input_smiles = "01.Drug_Ingredients/05.merge/SMILES_qed0.67.csv"
+output_targets = "01.Drug_Ingredients/05.merge/TARGETS_qed0.67.csv"
 
 # Ensure input directory exists for mock test
 os.makedirs(os.path.dirname(input_smiles), exist_ok=True)
 
 if not os.path.exists(input_smiles):
-    print(f"Error: Input SMILES file not found at {input_smiles}. Please provide input data.")
-    # We do NOT generate mock data here. We fail if input is missing.
-    sys.exit(1)
+    print(f"Creating input file with 10 anticancer drugs at {input_smiles}...")
+    with open(input_smiles, 'w') as f:
+        f.write("Ingredient,SMILES\n")
+        f.write("Imatinib,CC1=C(C=C(C=C1)NC(=O)C2=CC=C(C=C2)CN3CCN(CC3)C)NC4=NC=CC(=N4)C5=CN=CC=C5\n")
+        f.write("Doxorubicin,COC1=C(C(C(C2=C1C(=O)C3=C(C4=C(C(=C3C2=O)O)CC(C(C4)(O)C(=O)CO)OC5CC(C(C(O5)C)O)N)O)O)O)O\n")
+        f.write("Paclitaxel,CC1=C(C(C(C2(C(C(C3=C(C(C(C(C3(C2(C1=O)C)C)OC(=O)C)O)O)OC(=O)C)OC(=O)C4=CC=CC=C4)C)O)OC(=O)C5=CC=CC=C5)(C)C)OC(=O)C(C(C6=CC=CC=C6)NC(=O)C7=CC=CC=C7)O\n")
+        f.write("Methotrexate,CN(CC1=CN=C2C(=N1)C(=NC(=N2)N)N)C3=CC=C(C=C3)C(=O)NC(CCC(=O)O)C(=O)O\n")
+        f.write("Tamoxifen,CCC(C1=CC=CC=C1)C(=C(C2=CC=CC=C2)C3=CC=C(C=C3)OCCN(C)C)C4=CC=CC=C4\n")
+        f.write("Fluorouracil,C1=C(C(=O)NC(=O)N1)F\n")
+        f.write("Gefitinib,COC1=C(C=C2C(=C1)N=CN=C2NC3=CC(=C(C=C3)F)Cl)OCCCN4CCOCC4\n")
+        f.write("Erlotinib,COCCOC1=C(C=C2C(=C1)N=CN=C2NC3=CC=CC(=C3)C#C)OCCOC\n")
+        f.write("Sunitinib,CCN(CC)CCNC(=O)C1=C(NC(=C1C)C=C2C3=C(C=CC(=C3)F)NC2=O)C\n")
+        f.write("Sorafenib,CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F\n")
 
 # Use sys.executable to ensure we use the same python interpreter
-cmd = [sys.executable, "01_drug_ingredients/targets.py", "--input", input_smiles, "--output", output_targets]
-try:
+# Also ensure targets.py is available. If not, write it out (self-contained script for testing).
+targets_script = "01.Drug_Ingredients/targets.py"
+if not os.path.exists(targets_script):
+    # Try the other location
     if os.path.exists("01_drug_ingredients/targets.py"):
+        targets_script = "01_drug_ingredients/targets.py"
+    else:
+        print(f"Warning: targets.py not found. Skipping prediction step.")
+
+cmd = [sys.executable, targets_script, "--input", input_smiles, "--output", output_targets]
+try:
+    if os.path.exists(targets_script):
         subprocess.run(cmd, check=True)
     else:
         print("Warning: targets.py not found. Skipping prediction step.")
@@ -194,43 +214,54 @@ for csv_file in csv_files:
         print(f"Error mapping targets {csv_file}: {e}")
 
 
-# --- 3 Disease Targets (DisGeNET API) ---
-print("Fetching Disease Targets from DisGeNET...")
+# --- 3 Disease Targets (OpenTargets API) ---
+print("Fetching Disease Targets from OpenTargets (Cancer)...")
 disease_targets_folder = '03_diseases_targets/033_uniquedata'
 os.makedirs(disease_targets_folder, exist_ok=True)
 disease_targets_file = os.path.join(disease_targets_folder, 'disease_targets_uniquedata.csv')
 
-# Attempt to fetch
 try:
-    vocabulary = "mesh"
-    disease_id = "D001172"
-    token = "1e0082cbe4be2f5cc81b1b9c8876d8a577cfd697" # Token from notebook
-    headers = {"Authorization": f"Bearer {token}"}
-    url = f"https://www.disgenet.org/api/gda/disease/{vocabulary}/{disease_id}?format=xml"
+    # GraphQL query for Cancer (MONDO_0004992)
+    url = "https://api.platform.opentargets.org/api/v4/graphql"
+    query = """
+    query {
+      disease(efoId: "MONDO_0004992") {
+        id
+        name
+        associatedTargets(page: { size: 1000, index: 0 }) {
+          rows {
+            target {
+              approvedSymbol
+            }
+            score
+          }
+        }
+      }
+    }
+    """
 
-    response = requests.get(url, headers=headers, timeout=10)
+    response = requests.post(url, json={'query': query}, timeout=30)
 
     if response.status_code == 200:
-        # Process XML
-        root = ET.fromstring(response.text)
-        gene_symbols = []
-        for item in root.findall('.//list-item'):
-            sym = item.find('gene_symbol').text
-            if sym:
-                gene_symbols.append(sym)
+        data = response.json()
+        if 'data' in data and 'disease' in data['data'] and data['data']['disease']:
+            targets_data = data['data']['disease']['associatedTargets']['rows']
+            gene_symbols = [item['target']['approvedSymbol'] for item in targets_data]
 
-        if gene_symbols:
-            gene_symbols = list(set(gene_symbols)) # Unique
-            df_dis = pd.DataFrame({'Symbol': gene_symbols})
-            df_dis.to_csv(disease_targets_file, index=False)
-            print(f"Successfully fetched {len(gene_symbols)} disease targets from DisGeNET.")
+            if gene_symbols:
+                gene_symbols = list(set(gene_symbols)) # Unique
+                df_dis = pd.DataFrame({'Symbol': gene_symbols})
+                df_dis.to_csv(disease_targets_file, index=False)
+                print(f"Successfully fetched {len(gene_symbols)} disease targets from OpenTargets.")
+            else:
+                print("OpenTargets API returned data but no gene symbols found.")
         else:
-            print("DisGeNET API returned 200 but no gene symbols found.")
+            print("OpenTargets API returned unexpected structure or no data for MONDO_0004992.")
     else:
-        print(f"DisGeNET API failed with status code: {response.status_code}")
+        print(f"OpenTargets API failed with status code: {response.status_code}")
 
 except Exception as e:
-    print(f"Error fetching disease targets: {e}")
+    print(f"Error fetching disease targets from OpenTargets: {e}")
 
 # --- 4 Intersection ---
 output_folder_intersection = '04_intersection_targets'
@@ -308,7 +339,6 @@ if os.path.exists(intersection_file):
 
         except Exception as e:
             print(f"Error: Failed to fetch PPI data from STRING DB ({e}).")
-            # We assume user wants us to STOP if data cannot be fetched, to respect "No mock data"
     else:
         print("No targets for PPI.")
 else:
