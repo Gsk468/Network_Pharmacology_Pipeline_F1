@@ -217,3 +217,62 @@ if (file.exists(dt_file)) {
     }
   }
 }
+
+# --- Pathway Chord Plot (pathway_ccplot) ---
+library(GOplot)
+
+# Prepare Gene Data (ID, logFC)
+# We use centrality 'sum' as proxy for logFC for coloring
+genedata <- data.frame(ID = info$SYMBOL, logFC = info$sum)
+
+# Prepare Term Data (category, ID, term, adj_pval, genes)
+# KEGG result has: ID, Description, GeneRatio, BgRatio, pvalue, p.adjust, qvalue, geneID, Count
+if (exists("KEGG") && !is.null(KEGG)) {
+  kegg_df <- as.data.frame(KEGG)
+  if (nrow(kegg_df) > 0) {
+    # GOplot needs 'genes' column to be comma separated? No, circle_dat merges.
+    # circle_dat(terms, genes)
+    # terms: category, ID, term, adj_pval
+    # genes: ID, logFC
+    # But how does it know which genes belong to which term?
+    # Actually, circle_dat merges if terms has 'genes' column?
+    # Standard usage: circle_dat(terms, genes)
+    # terms should have 'genes' column?
+    # Let's check documentation or common usage.
+    # Usually circle_dat builds the object from enrichment result + gene data.
+    # If we use clusterProfiler result, we might need conversion.
+
+    # Simple approach: Construct the data frame expected by GOChord directly if possible, or use circle_dat.
+    # circle_dat expects 'genes' column in 'terms' data frame to be a list of gene symbols?
+    # Or 'geneID' column (slash separated).
+    # GOplot::circle_dat tries to match.
+
+    # Format for circle_dat:
+    # terms: category, ID, term, adj_pval, genes (data frame)
+    #   genes column: Uppercase gene symbols
+    # Let's try to adapt kegg_df
+
+    terms_df <- data.frame(
+      category = "KEGG",
+      ID = kegg_df$ID,
+      term = kegg_df$Description,
+      adj_pval = kegg_df$p.adjust,
+      genes = gsub("/", ",", kegg_df$geneID), # GOplot expects comma separated
+      stringsAsFactors = FALSE
+    )
+
+    # GOplot::circle_dat
+    tryCatch({
+      circ <- circle_dat(terms_df, genedata)
+
+      # Plot GOChord
+      # limit: number of terms
+      # gene.order: 'logFC'
+      p_chord <- GOChord(circ, space = 0.02, gene.order = 'logFC', gene.space = 0.25, gene.size = 5)
+
+      ggsave(file.path(output_dir, "pathway_ccplot.svg"), p_chord, device = "svg", width = 12, height = 12)
+    }, error = function(e) {
+      message("Error generating Chord plot: ", e$message)
+    })
+  }
+}

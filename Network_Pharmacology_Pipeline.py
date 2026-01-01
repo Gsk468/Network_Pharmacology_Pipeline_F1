@@ -426,6 +426,20 @@ if os.path.exists(ppi_file):
             df_top.index.name = "SYMBOL"
             df_top.to_excel(os.path.join(output_folder_ppi, "selected_proteins.xlsx"), index=True)
 
+            # Generate PPI Plot
+            try:
+                plt.figure(figsize=(10, 10))
+                pos = nx.spring_layout(G)
+                nx.draw(G, pos, with_labels=True, node_color='skyblue', node_size=1500, edge_color='gray', font_size=10, font_weight='bold')
+                plt.title("PPI Network")
+                ppi_plot_path = os.path.join("07_figure", "ppi_plot.png")
+                os.makedirs("07_figure", exist_ok=True)
+                plt.savefig(ppi_plot_path)
+                plt.close()
+                print(f"PPI plot saved to {ppi_plot_path}")
+            except Exception as e:
+                print(f"Error plotting PPI: {e}")
+
             # Export Drug-Target Interactions for R Sankey Plot
             dt_edges = []
             dt_files = glob.glob(os.path.join(output_folder_intersection, '*_adjusted.csv'))
