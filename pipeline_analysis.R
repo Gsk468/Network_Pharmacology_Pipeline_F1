@@ -168,3 +168,52 @@ ggsave(file.path(output_dir, "KEGG_heatplot.svg"), p8, device = "svg", width = w
 ggsave(file.path(output_dir, "GO_emapplot.svg"), p9, device = "svg", width = width, height = height)
 
 ggsave(file.path(output_dir, "KEGG_emapplot.svg"), p10, device = "svg", width = width, height = height)
+
+# --- Sankey Diagram (Drug-Target-Pathway) ---
+library(ggalluvial)
+library(dplyr)
+
+# Load Drug-Target Interactions
+dt_file <- "05_ppi/drug_target_interactions.csv"
+if (file.exists(dt_file)) {
+  dt_data <- read.csv(dt_file)
+
+  # Load Pathway-Target (KEGG results)
+  kegg_res_file <- file.path(output_dir, "KEGG_enrichment_results.csv")
+  if (file.exists(kegg_res_file)) {
+    kegg_data <- read.csv(kegg_res_file)
+
+    # Process KEGG data to get Target-Pathway pairs
+    tp_edges <- data.frame(Target = character(), Pathway = character(), stringsAsFactors = FALSE)
+
+    # Only top 10 pathways to avoid clutter
+    top_kegg <- head(kegg_data, 10)
+
+    for (i in 1:nrow(top_kegg)) {
+      pathway <- top_kegg$Description[i]
+      genes <- strsplit(as.character(top_kegg$geneID[i]), "/")[[1]]
+      for (gene in genes) {
+        tp_edges <- rbind(tp_edges, data.frame(Target = gene, Pathway = pathway))
+      }
+    }
+
+    # Merge Drug-Target and Target-Pathway
+    # Join by Target
+    sankey_data <- merge(dt_data, tp_edges, by = "Target")
+
+    if (nrow(sankey_data) > 0) {
+      # Plot Sankey
+      p_sankey <- ggplot(sankey_data,
+                         aes(axis1 = Drug, axis2 = Target, axis3 = Pathway)) +
+        geom_alluvium(aes(fill = Drug), width = 1/12) +
+        geom_stratum(width = 1/12, fill = "black", color = "grey") +
+        geom_label(stat = "stratum", aes(label = after_stat(stratum))) +
+        scale_x_discrete(limits = c("Drug", "Target", "Pathway"), expand = c(.05, .05)) +
+        scale_fill_viridis_d() +
+        theme_minimal() +
+        ggtitle("Drug-Target-Pathway Sankey Diagram")
+
+      ggsave(file.path(output_dir, "Sankey_Diagram.svg"), p_sankey, device = "svg", width = 12, height = 8)
+    }
+  }
+}

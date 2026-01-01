@@ -425,6 +425,25 @@ if os.path.exists(ppi_file):
             df_top = df_cen.iloc[:, 0:1].head(20)
             df_top.index.name = "SYMBOL"
             df_top.to_excel(os.path.join(output_folder_ppi, "selected_proteins.xlsx"), index=True)
+
+            # Export Drug-Target Interactions for R Sankey Plot
+            dt_edges = []
+            dt_files = glob.glob(os.path.join(output_folder_intersection, '*_adjusted.csv'))
+            # Need intersection targets set
+            intersection_file = os.path.join(output_folder_intersection, 'intersection_targets.csv')
+            if os.path.exists(intersection_file):
+                intersection_targets = set(pd.read_csv(intersection_file)['Processed Value'].tolist())
+                for dt_file in dt_files:
+                    try:
+                        df_dt = pd.read_csv(dt_file)
+                        if 'Ingredient' in df_dt.columns and 'Processed Value' in df_dt.columns:
+                            for _, row in df_dt.iterrows():
+                                if row['Processed Value'] in intersection_targets:
+                                    dt_edges.append({'Drug': row['Ingredient'], 'Target': row['Processed Value']})
+                    except: pass
+                pd.DataFrame(dt_edges).to_csv(os.path.join(output_folder_ppi, "drug_target_interactions.csv"), index=False)
+                print("Exported drug_target_interactions.csv for R.")
+
             print("PPI analysis complete.")
         else:
             print("PPI Graph is empty.")
@@ -457,6 +476,11 @@ def install_r_packages():
         BiocManager::install(to_install, ask = FALSE)
     }} else {{
         message("All R packages are already installed.")
+    }}
+
+    # Install ggalluvial for Sankey
+    if (!require("ggalluvial", quietly = TRUE)) {{
+        install.packages("ggalluvial", repos = "https://cloud.r-project.org")
     }}
     """
 
