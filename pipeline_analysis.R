@@ -54,6 +54,8 @@ KEGG<-enrichKEGG(gene$ENTREZID,#KEGG富集分析
                  organism = KEGG_database,
                  pvalueCutoff = 0.05,
                  qvalueCutoff = 0.05)
+# Ensure readable gene symbols
+KEGG <- setReadable(KEGG, OrgDb = GO_database, keyType = "ENTREZID")
 print(KEGG)
 # 将结果保存为CSV文件
 output_file <- file.path(output_dir, "KEGG_enrichment_results.csv")

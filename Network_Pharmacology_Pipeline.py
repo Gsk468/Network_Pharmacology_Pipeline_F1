@@ -431,9 +431,54 @@ if os.path.exists(ppi_file):
     except Exception as e:
         print(f"Error in PPI analysis: {e}")
 
+# --- Install R Packages ---
+def install_r_packages():
+    print("Checking and installing R packages...")
+    required_packages = [
+        "openxlsx", "ggplot2", "stringr", "enrichplot", "clusterProfiler",
+        "GOplot", "DOSE", "ggnewscale", "topGO", "circlize", "ComplexHeatmap"
+    ]
+
+    # R script to check and install packages
+    r_code = f"""
+    packages <- c({', '.join([f'"{p}"' for p in required_packages])})
+
+    # Check if BiocManager is installed
+    if (!require("BiocManager", quietly = TRUE)) {{
+        install.packages("BiocManager", repos = "https://cloud.r-project.org")
+    }}
+
+    # Install missing packages
+    installed <- rownames(installed.packages())
+    to_install <- setdiff(packages, installed)
+
+    if (length(to_install) > 0) {{
+        message("Installing packages: ", paste(to_install, collapse = ", "))
+        BiocManager::install(to_install, ask = FALSE)
+    }} else {{
+        message("All R packages are already installed.")
+    }}
+    """
+
+    r_script_path = "install_packages.R"
+    with open(r_script_path, "w") as f:
+        f.write(r_code)
+
+    try:
+        subprocess.run(["Rscript", r_script_path], check=True)
+        print("R package installation complete.")
+    except subprocess.CalledProcessError as e:
+        print(f"Warning: R package installation failed: {e}. Workflow may fail if packages are missing.")
+    except FileNotFoundError:
+        print("Rscript not found. Skipping package installation.")
+    finally:
+        if os.path.exists(r_script_path):
+            os.remove(r_script_path)
+
 # --- Execute R Script ---
 print('Running R analysis...')
 if shutil.which('Rscript'):
+    install_r_packages()
     if os.path.exists("05_ppi/selected_proteins.xlsx"):
          try:
              subprocess.run(['Rscript', 'pipeline_analysis.R'], check=True)
@@ -443,3 +488,109 @@ if shutil.which('Rscript'):
          print("Skipping R analysis (input missing).")
 else:
     print("Rscript not found. Skipping R analysis.")
+
+# --- Generate Cytoscape Files ---
+def generate_cytoscape_files():
+    print("Generating Cytoscape import files...")
+    output_dir = "07_figure"
+    os.makedirs(output_dir, exist_ok=True)
+
+    # 1. Load Intersection Targets
+    intersection_file = os.path.join(output_folder_intersection, 'intersection_targets.csv')
+    if not os.path.exists(intersection_file):
+        print("Intersection file missing. Cannot generate Cytoscape files.")
+        return
+    intersection_targets = set(pd.read_csv(intersection_file)['Processed Value'].tolist())
+
+    edges = []
+    nodes = {} # Id -> {Type, Attributes...}
+
+    # Helper to add node
+    def add_node(node_id, node_type):
+        if node_id not in nodes:
+            nodes[node_id] = {'Id': node_id, 'Type': node_type}
+        elif nodes[node_id]['Type'] != node_type and node_type != 'Target':
+             # Keep specific type if overwritten by generic Target? No, Target is specific.
+             pass
+
+    # 2. Drug-Target Edges (filtered by intersection)
+    # The drug-target files are in '04_intersection_targets/*_adjusted.csv' EXCEPT intersection_targets.csv
+    dt_files = glob.glob(os.path.join(output_folder_intersection, '*_adjusted.csv'))
+    for dt_file in dt_files:
+        try:
+            df = pd.read_csv(dt_file)
+            # Assuming columns: Ingredient, Processed Value (Target)
+            # targets.py output has 'Ingredient', 'UniProt_name'. adjusted csv has 'Processed Value' mapping.
+            # But the adjusted csv only has 'Processed Value' if I recall correctly (just the list).
+            # Wait, my code for mapping targets (Line ~187) wrote:
+            # df['Processed Value'] = ...
+            # df.to_csv(output_csv, index=False)
+            # So it has ALL columns from targets.csv + Processed Value.
+            # targets.csv has 'Ingredient'.
+            if 'Ingredient' in df.columns and 'Processed Value' in df.columns:
+                for _, row in df.iterrows():
+                    drug = row['Ingredient']
+                    target = row['Processed Value']
+                    if target in intersection_targets:
+                        edges.append({'Source': drug, 'Target': target, 'Interaction': 'Drug-Target'})
+                        add_node(drug, 'Drug')
+                        add_node(target, 'Target')
+        except Exception as e:
+            print(f"Error processing {dt_file} for Cytoscape: {e}")
+
+    # 3. PPI Edges
+    ppi_file = os.path.join(output_folder_ppi, "protein_interactions.tsv")
+    if os.path.exists(ppi_file):
+        try:
+            df_ppi = pd.read_csv(ppi_file, sep="\t")
+            for _, row in df_ppi.iterrows():
+                # Columns: preferredName_A, preferredName_B, score
+                if 'preferredName_A' in row and 'preferredName_B' in row:
+                    p1, p2 = row['preferredName_A'], row['preferredName_B']
+                    # PPI is already filtered by intersection logic in step 5 implicitly?
+                    # Yes, my_genes was derived from intersection_file.
+                    edges.append({'Source': p1, 'Target': p2, 'Interaction': 'PPI'})
+                    add_node(p1, 'Target')
+                    add_node(p2, 'Target')
+        except Exception as e:
+            print(f"Error processing PPI for Cytoscape: {e}")
+
+    # 4. Pathway-Target Edges
+    # From R output: 06_enrichment/KEGG_enrichment_results.csv
+    kegg_file = "06_enrichment/KEGG_enrichment_results.csv"
+    if os.path.exists(kegg_file):
+        try:
+            df_kegg = pd.read_csv(kegg_file)
+            # Columns: ID, Description, ..., geneID (slash separated symbols)
+            if 'Description' in df_kegg.columns and 'geneID' in df_kegg.columns:
+                for _, row in df_kegg.iterrows():
+                    pathway = row['Description']
+                    genes = str(row['geneID']).split('/')
+                    for gene in genes:
+                        if gene in intersection_targets:
+                            edges.append({'Source': gene, 'Target': pathway, 'Interaction': 'Target-Pathway'})
+                            add_node(gene, 'Target')
+                            add_node(pathway, 'Pathway')
+        except Exception as e:
+            print(f"Error processing KEGG for Cytoscape: {e}")
+
+    # 5. Node Attributes (Centrality)
+    cen_file = os.path.join(output_folder_ppi, "centrality_measures.csv")
+    if os.path.exists(cen_file):
+        try:
+            # Index is gene name if saved by pandas with default index?
+            # My code: df_cen = pd.DataFrame(centrality_measures); df_cen.to_csv(...)
+            # So csv has first column as index (no header or "Unnamed: 0").
+            df_cen = pd.read_csv(cen_file, index_col=0)
+            for node_id, row in df_cen.iterrows():
+                if node_id in nodes:
+                    nodes[node_id].update(row.to_dict())
+        except Exception as e:
+            print(f"Error processing attributes for Cytoscape: {e}")
+
+    # Export
+    pd.DataFrame(edges).to_csv(os.path.join(output_dir, "cytoscape_edges.csv"), index=False)
+    pd.DataFrame(list(nodes.values())).to_csv(os.path.join(output_dir, "cytoscape_nodes.csv"), index=False)
+    print(f"Cytoscape files generated in {output_dir}")
+
+generate_cytoscape_files()
