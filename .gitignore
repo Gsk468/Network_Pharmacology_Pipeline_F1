@@ -3,6 +3,7 @@ __pycache__/
 *.xlsx
 *.tsv
 *.xml
+*.svg
 01.Drug_Ingredients/
 01_drug_ingredients/
 02_ingredients_targets/

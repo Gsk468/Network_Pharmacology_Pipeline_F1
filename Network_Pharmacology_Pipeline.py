@@ -16,9 +16,9 @@ import chardet
 from time import sleep
 import matplotlib.pyplot as plt
 import networkx as nx
+import xml.etree.ElementTree as ET
 
 # --- Configuration ---
-# You can override these variables
 INPUT_FOLDER_RAW = '01.Drug_Ingredients/01.ingredients_rawdata'
 OUTPUT_FOLDER_PREPROCESSED = '01.Drug_Ingredients/02.ingredients_preprocesseddata'
 OUTPUT_FOLDER_AUGMENTED = '01.Drug_Ingredients/03.ingredients_augmenteddata'
@@ -99,9 +99,6 @@ else:
     print("Skipping HERB processing (input files missing).")
 
 
-# --- 1.3 Data Augmentation (ETCM/PubChem) ---
-# ... (Simulated or simplified for robustness)
-
 # --- Target Prediction ---
 # Call external script
 print("Running Target Prediction...")
@@ -110,22 +107,30 @@ output_targets = "01_drug_ingredients/05.merge/TARGETS_qed0.67.csv"
 
 # Ensure input directory exists for mock test
 os.makedirs(os.path.dirname(input_smiles), exist_ok=True)
+
 if not os.path.exists(input_smiles):
-    # Create dummy SMILES file if not exists
-    with open(input_smiles, 'w') as f:
-        f.write("Ingredient,SMILES\nDrugA,CCO\nDrugB,CCN\n")
+    print(f"Error: Input SMILES file not found at {input_smiles}. Please provide input data.")
+    # We do NOT generate mock data here. We fail if input is missing.
+    sys.exit(1)
 
 # Use sys.executable to ensure we use the same python interpreter
 cmd = [sys.executable, "01_drug_ingredients/targets.py", "--input", input_smiles, "--output", output_targets]
 try:
-    subprocess.run(cmd, check=True)
+    if os.path.exists("01_drug_ingredients/targets.py"):
+        subprocess.run(cmd, check=True)
+    else:
+        print("Warning: targets.py not found. Skipping prediction step.")
 except subprocess.CalledProcessError as e:
     print(f"Error running targets.py: {e}")
-except FileNotFoundError:
-    print("Error: targets.py not found.")
 
 # --- 2.2 Target Processing (Human Filter) ---
 input_folder_targets = '02_ingredients_targets/021_ingredients_targets_orig'
+# targets.py is expected to output to input_folder_targets, OR we need to move it there.
+if os.path.exists(output_targets):
+    os.makedirs(input_folder_targets, exist_ok=True)
+    shutil.copy(output_targets, os.path.join(input_folder_targets, "targets.csv"))
+    print(f"Copied {output_targets} to {input_folder_targets}/targets.csv")
+
 output_folder_targets_proc = '02_ingredients_targets/022_ingredients_targets_processed'
 os.makedirs(output_folder_targets_proc, exist_ok=True)
 
@@ -170,35 +175,147 @@ if os.path.exists(input_folder_proc):
             print(f"Error unique processing {csv_file}: {e}")
 
 # --- 2.4 UniProt Check ---
-# Skipping API call for robustness in sandbox without internet access guarantees, or just mocking
 print("Skipping UniProt API calls for verification in this script version.")
+# We need to map 'GENE_HUMAN' to 'GENE' symbol for downstream analysis
+input_folder = '02_ingredients_targets/023_ingredients_targets_uniquedata'
+output_folder = '04_intersection_targets'
+os.makedirs(output_folder, exist_ok=True)
+csv_files = glob.glob(os.path.join(input_folder, '*_uniquedata.csv'))
+for csv_file in csv_files:
+    try:
+        df = pd.read_csv(csv_file)
+        if 'UniProt_name' in df.columns:
+            # Simplified mapping: GENE_HUMAN -> GENE
+            df['Processed Value'] = df['UniProt_name'].apply(lambda x: x.split('_')[0] if isinstance(x, str) and '_' in x else x)
+            output_csv = os.path.join(output_folder, os.path.basename(csv_file).replace('_uniquedata.csv', '_adjusted.csv'))
+            df.to_csv(output_csv, index=False)
+            print(f"Mapped targets saved to {output_csv}")
+    except Exception as e:
+        print(f"Error mapping targets {csv_file}: {e}")
 
-# --- 3 Disease Targets ---
-# Skipping DisGeNET API call
+
+# --- 3 Disease Targets (DisGeNET API) ---
+print("Fetching Disease Targets from DisGeNET...")
+disease_targets_folder = '03_diseases_targets/033_uniquedata'
+os.makedirs(disease_targets_folder, exist_ok=True)
+disease_targets_file = os.path.join(disease_targets_folder, 'disease_targets_uniquedata.csv')
+
+# Attempt to fetch
+try:
+    vocabulary = "mesh"
+    disease_id = "D001172"
+    token = "1e0082cbe4be2f5cc81b1b9c8876d8a577cfd697" # Token from notebook
+    headers = {"Authorization": f"Bearer {token}"}
+    url = f"https://www.disgenet.org/api/gda/disease/{vocabulary}/{disease_id}?format=xml"
+
+    response = requests.get(url, headers=headers, timeout=10)
+
+    if response.status_code == 200:
+        # Process XML
+        root = ET.fromstring(response.text)
+        gene_symbols = []
+        for item in root.findall('.//list-item'):
+            sym = item.find('gene_symbol').text
+            if sym:
+                gene_symbols.append(sym)
+
+        if gene_symbols:
+            gene_symbols = list(set(gene_symbols)) # Unique
+            df_dis = pd.DataFrame({'Symbol': gene_symbols})
+            df_dis.to_csv(disease_targets_file, index=False)
+            print(f"Successfully fetched {len(gene_symbols)} disease targets from DisGeNET.")
+        else:
+            print("DisGeNET API returned 200 but no gene symbols found.")
+    else:
+        print(f"DisGeNET API failed with status code: {response.status_code}")
+
+except Exception as e:
+    print(f"Error fetching disease targets: {e}")
 
 # --- 4 Intersection ---
 output_folder_intersection = '04_intersection_targets'
 os.makedirs(output_folder_intersection, exist_ok=True)
-# Mocking intersection results if not present
-if not os.path.exists(os.path.join(output_folder_intersection, 'intersection_targets.csv')):
-     # Create dummy intersection
-     print("Creating dummy intersection_targets.csv for PPI step.")
-     pd.DataFrame({'Processed Value': ['TP53', 'TNF', 'IL6', 'AKT1', 'VEGFA']}).to_csv(os.path.join(output_folder_intersection, 'intersection_targets.csv'), index=False)
+
+uni_sets = []
+
+# Add Ingredient Targets
+ingredient_files = glob.glob(os.path.join(output_folder_intersection, '*_adjusted.csv'))
+for csv_file in ingredient_files:
+    try:
+        with open(csv_file, 'rb') as f:
+            result = chardet.detect(f.read())
+        encoding = result['encoding'] if result['encoding'] else 'utf-8'
+        df = pd.read_csv(csv_file, encoding=encoding)
+        if 'Processed Value' in df.columns:
+            uni_sets.append(set(df['Processed Value']))
+    except Exception as e:
+        print(f"Error reading {csv_file}: {e}")
+
+# Add Disease Targets
+if os.path.exists(disease_targets_file):
+    try:
+        df_dis = pd.read_csv(disease_targets_file)
+        if 'Symbol' in df_dis.columns:
+            uni_sets.append(set(df_dis['Symbol']))
+            print("Included Disease Targets in intersection.")
+    except Exception as e:
+        print(f"Error reading disease targets: {e}")
+else:
+    print("Warning: Disease targets file missing. Intersection logic incomplete.")
+
+if uni_sets:
+    intersection = set.intersection(*uni_sets)
+    result_df = pd.DataFrame(list(intersection), columns=['Processed Value'])
+    result_df.to_csv(os.path.join(output_folder_intersection, 'intersection_targets.csv'), index=False)
+    print(f"Intersection targets saved. Count: {len(intersection)}")
+else:
+    print("No sets for intersection.")
 
 
 # --- 5 PPI (STRING DB) ---
-# Skipping API call
-print("Skipping STRING DB API call.")
-# Create dummy PPI network
+print("Running PPI Analysis...")
+string_api_url = "https://string-db.org/api"
+output_format = "tsv"
+method = "network"
+
+intersection_file = os.path.join(output_folder_intersection, 'intersection_targets.csv')
 output_folder_ppi = "05_ppi"
 os.makedirs(output_folder_ppi, exist_ok=True)
-if not os.path.exists(os.path.join(output_folder_ppi, "protein_interactions.tsv")):
-    print("Creating dummy protein_interactions.tsv")
-    with open(os.path.join(output_folder_ppi, "protein_interactions.tsv"), 'w') as f:
-        f.write("preferredName_A\tpreferredName_B\tscore\nTP53\tTNF\t0.9\nTNF\tIL6\t0.95\n")
+ppi_file = os.path.join(output_folder_ppi, "protein_interactions.tsv")
+
+if os.path.exists(intersection_file):
+    df_int = pd.read_csv(intersection_file)
+    my_genes = df_int['Processed Value'].tolist()
+
+    if my_genes:
+        print(f"Attempting PPI retrieval for {len(my_genes)} targets...")
+        try:
+            request_url = "/".join([string_api_url, output_format, method])
+            params = {
+                "identifiers": "%0d".join(my_genes),
+                "species": 9606,
+                "required_score": 400,
+                "caller_identity": "network_pharmacology_pipeline"
+            }
+            response = requests.post(request_url, data=params, timeout=10)
+
+            if response.status_code == 200 and response.text.strip():
+                with open(ppi_file, "w") as f:
+                    f.write(response.text)
+                print(f"Protein interactions saved to {ppi_file}")
+            else:
+                print(f"STRING DB API returned status {response.status_code} or no data.")
+
+        except Exception as e:
+            print(f"Error: Failed to fetch PPI data from STRING DB ({e}).")
+            # We assume user wants us to STOP if data cannot be fetched, to respect "No mock data"
+    else:
+        print("No targets for PPI.")
+else:
+    print("Intersection file missing for PPI.")
+
 
 # --- Network Analysis ---
-ppi_file = os.path.join(output_folder_ppi, "protein_interactions.tsv")
 if os.path.exists(ppi_file):
     try:
         ppi_data = pd.read_csv(ppi_file, sep="\t")
@@ -227,7 +344,7 @@ if os.path.exists(ppi_file):
             # Select top proteins for R
             df_top = df_cen.iloc[:, 0:1].head(20)
             df_top.index.name = "SYMBOL"
-            df_top.to_excel(os.path.join(output_folder_ppi, "selected_proteins.xlsx"), index=True) # Index is the gene name
+            df_top.to_excel(os.path.join(output_folder_ppi, "selected_proteins.xlsx"), index=True)
             print("PPI analysis complete.")
         else:
             print("PPI Graph is empty.")
@@ -237,15 +354,12 @@ if os.path.exists(ppi_file):
 # --- Execute R Script ---
 print('Running R analysis...')
 if shutil.which('Rscript'):
-    try:
-        # Create a dummy selected_proteins.xlsx if it doesn't exist for R script to run
-        if not os.path.exists("05_ppi/selected_proteins.xlsx"):
-             print("Creating dummy selected_proteins.xlsx for R script")
-             os.makedirs("05_ppi", exist_ok=True)
-             pd.DataFrame({'SYMBOL': ['TP53', 'TNF', 'IL6']}).to_excel("05_ppi/selected_proteins.xlsx", index=False)
-
-        subprocess.run(['Rscript', 'pipeline_analysis.R'], check=True)
-    except subprocess.CalledProcessError as e:
-        print(f"R script failed: {e}")
+    if os.path.exists("05_ppi/selected_proteins.xlsx"):
+         try:
+             subprocess.run(['Rscript', 'pipeline_analysis.R'], check=True)
+         except subprocess.CalledProcessError as e:
+             print(f"R script failed: {e}")
+    else:
+         print("Skipping R analysis (input missing).")
 else:
     print("Rscript not found. Skipping R analysis.")
