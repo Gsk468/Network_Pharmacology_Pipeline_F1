@@ -1,0 +1,14 @@
+__pycache__/
+*.csv
+*.xlsx
+*.tsv
+*.xml
+01.Drug_Ingredients/
+01_drug_ingredients/
+02_ingredients_targets/
+03_diseases_targets/
+04.Final/
+04_intersection_targets/
+05_ppi/
+06_enrichment/
+07_figure/
