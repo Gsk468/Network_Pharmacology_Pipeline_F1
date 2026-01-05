@@ -5,8 +5,10 @@ A comprehensive workflow for network pharmacology analysis, integrating data pro
 ## Overview
 
 This repository provides two ways to run the workflow:
-1.  **Standalone Python Script (`Network_Pharmacology_Pipeline.py`)**: A fully automated pipeline suitable for batch processing and integration.
+1.  **Standalone Python Script (`run_pipeline.py`)**: A fully automated pipeline suitable for batch processing and integration.
 2.  **Jupyter Notebook (`Network_Pharmacology_Pipeline.ipynb`)**: An interactive environment for step-by-step execution and visualization.
+
+> **Important**: Do not run the `.ipynb` file directly with `python`. Use `python run_pipeline.py` for the script, or open the `.ipynb` file in a Jupyter environment.
 
 ## Key Features
 
@@ -35,7 +37,7 @@ This repository provides two ways to run the workflow:
 The easiest way to run the analysis is using the standalone script. It handles input generation, API calls, and R execution automatically.
 
 ```bash
-python Network_Pharmacology_Pipeline.py
+python run_pipeline.py
 ```
 
 **What happens:**
